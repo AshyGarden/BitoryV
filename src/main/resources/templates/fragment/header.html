@@ -23,32 +23,32 @@
         </div>
     </header>
     <script>
-        // localStorage에 저장된 값을 가져오는 함수
-        function getOTIFromLocalStorage(key, defaultValue) {
-            // localStorage에서 해당 키로 저장된 값을 가져옴
-            const storedValue = localStorage.getItem('oti');
+<!--        // localStorage에 저장된 값을 가져오는 함수-->
+<!--        function getOTIFromLocalStorage(key, defaultValue) {-->
+<!--            // localStorage에서 해당 키로 저장된 값을 가져옴-->
+<!--            const storedValue = localStorage.getItem('oti');-->
 
-            // 만약 값이 존재한다면 해당 값을 반환, 아니면 기본값 반환
-            return storedValue !== null ? storedValue : defaultValue;
-        }
+<!--            // 만약 값이 존재한다면 해당 값을 반환, 아니면 기본값 반환-->
+<!--            return storedValue !== null ? storedValue : defaultValue;-->
+<!--        }-->
 
-        function getOTBFromLocalStorage(key, defaultValue) {
-            // localStorage에서 해당 키로 저장된 값을 가져옴
-            const storedValue = localStorage.getItem(key);
+<!--        function getOTBFromLocalStorage(key, defaultValue) {-->
+<!--            // localStorage에서 해당 키로 저장된 값을 가져옴-->
+<!--            const storedValue = localStorage.getItem(key);-->
 
-            // 만약 값이 존재한다면 해당 값을 반환, 아니면 기본값 반환
-            return storedValue !== null ? storedValue : defaultValue;
-        }
+<!--            // 만약 값이 존재한다면 해당 값을 반환, 아니면 기본값 반환-->
+<!--            return storedValue !== null ? storedValue : defaultValue;-->
+<!--        }-->
 
-        // 페이지 로드 시 실행
-        window.onload = function() {
-            // localStorage에서 'myValue'라는 키로 저장된 값을 가져옴
-            const storedID = getOTIFromLocalStorage(oti, 'Null');
-            const storedBdg = getOTBFromLocalStorage(otb, 'Null');
+<!--        // 페이지 로드 시 실행-->
+<!--        window.onload = function() {-->
+<!--            // localStorage에서 'myValue'라는 키로 저장된 값을 가져옴-->
+<!--            const storedID = getOTIFromLocalStorage(oti, 'Null');-->
+<!--            const storedBdg = getOTBFromLocalStorage(otb, 'Null');-->
 
-            // 가져온 값을 화면에 표시
-            document.body.innerHTML
-        };
+<!--            // 가져온 값을 화면에 표시-->
+<!--            document.body.innerHTML-->
+<!--        };-->
     </script>
     <!-- ***** Header Area End ***** -->
 </th:block>
