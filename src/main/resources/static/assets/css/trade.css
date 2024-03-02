@@ -1,0 +1,199 @@
+.positive {
+    color: red;
+}
+
+.negative {
+    color: blue;
+}
+
+/* 기본 상태에서는 화살표를 숨깁니다. */
+.sortable:after {
+    content: '';
+    display: none; /* 기본적으로 화살표를 숨깁니다. */
+    color: black;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+/* 오름차순 및 내림차순 상태에서 화살표를 표시합니다. */
+.asc:after, .desc:after {
+    display: inline; /* 화살표를 표시합니다. */
+}
+
+.asc:after {
+    content: '\25b2'; /* 오름차순 화살표 */
+}
+
+.desc:after {
+    content: '\25bc'; /* 내림차순 화살표 */
+}
+
+.initial:after {
+    content: ''; /* 정렬 상태 초기화 */
+}
+
+thead th {
+    cursor: pointer; /* 클릭 가능 표시 */
+}
+
+
+@keyframes flashBorderRed {
+    0% { border: 2px solid rgba(255, 0, 0, 1); }
+    100% { border: 2px solid transparent; }
+}
+
+@keyframes flashBorderBlue {
+    0% { border: 2px solid rgba(0, 0, 255, 1); }
+    100% { border: 2px solid transparent; }
+}
+
+.flash-border-red {
+    animation: flashBorderRed 1s;
+    animation-fill-mode: forwards; /* 애니메이션 완료 상태 유지 */
+}
+
+.flash-border-blue {
+    animation: flashBorderBlue 1s;
+    animation-fill-mode: forwards;
+}
+
+
+
+
+.container-table {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.table-container {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+
+.table-order {
+    width: 100%;
+    border-collapse: collapse;
+    color: #ffffff; /* 텍스트 색상은 이미지에 맞게 조정하세요 */
+    table-layout: fixed;
+}
+
+.table-order td {
+    border: 1px solid #4caf50; /* 테두리 색상은 이미지에 맞게 조정하세요 */
+}
+
+.table-order .order-type {
+    text-align: center;
+}
+
+.table-order .order-type input[type="radio"] {
+    margin-right: 10px;
+}
+
+.table-order .order-type label {
+    margin-right: 30px;
+}
+
+.table-order input[type="number"],
+.table-order input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.table-order .order-amount-buttons button {
+    width: 24%; /* 버튼 네 개가 같은 행에 균등하게 들어가도록 조정 */
+    padding: 5px;
+    margin: 2px;
+    background-color: #4caf50; /* 버튼 배경 색상은 이미지에 맞게 조정하세요 */
+    border: none;
+    color: #ffffff; /* 버튼 텍스트 색상은 이미지에 맞게 조정하세요 */
+}
+
+
+
+
+.order-box {
+    border: 1px solid #4caf50; /* 테두리 색상을 이미지에 맞게 설정하세요 */
+    color: #ffffff; /* 텍스트 색상을 이미지에 맞게 설정하세요 */
+    padding: 10px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.order-type {
+    /* 라디오 버튼 스타일링 */
+}
+
+.order-content .order-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.order-info {
+    padding: 5px 10px;
+}
+
+.order-content input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.order-percentage button {
+    width: 23%; /* 4개의 버튼이 동일한 크기를 갖도록 설정하세요 */
+    padding: 5px;
+    margin-right: 1%;
+    background-color: #4caf50; /* 버튼 배경색을 이미지에 맞게 설정하세요 */
+    color: #ffffff; /* 버튼 텍스트 색상을 이미지에 맞게 설정하세요 */
+    border: none;
+}
+
+/* 마지막 버튼의 오른쪽 마진을 0으로 설정 */
+.order-percentage button:last-child {
+    margin-right: 0;
+}
+
+
+.DetailTrade-table > td{
+    font-size: 0.75rem;
+    padding: 1%;
+    width: 100%;
+
+}
+
+
+#container-table {
+    display: flex;
+    flex-direction: column;
+    max-height: 625px;
+    overflow-y: auto;
+}
+
+
+/* 스크롤바 스타일을 추가합니다 */
+#container-table {
+    max-height: 625px; /* 스크롤바가 나타나길 원하는 높이 */
+    overflow-y: auto; /* 컨텐츠가 넘칠 때 세로 스크롤바를 표시 */
+}
+
+/* 스크롤바 디자인을 커스텀합니다 */
+#container-table::-webkit-scrollbar {
+  width: 10px; /* 스크롤바의 너비 */
+}
+
+#container-table::-webkit-scrollbar-thumb {
+  height: 10%; /* 스크롤바의 길이 */
+  background: rgb(225, 225, 225); /* 스크롤바의 색상 */
+  border-radius: 10px; /* 스크롤바 모서리의 둥근 정도 */
+}
+
+#container-table::-webkit-scrollbar-track {
+  background: rgba(33, 122, 244, .1); /* 스크롤바 트랙의 배경 색상 */
+}

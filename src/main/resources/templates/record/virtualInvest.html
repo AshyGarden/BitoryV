@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template}">
+<head></head>
+<body>
+<th:block layout:fragment="content">
+    <meta charset="utf-8">
+    <div class="main-banner" id="top">
+        <div id="main" class="container">
+            <!-- =========================   실시간 가상화폐 주가 테이블  ==============================-->
+            <div class="services section" id="services">
+                <div class="container">
+                    <div class="row">
+                        <div class="container col-6" id="marketTable">
+                            <div class="container-table" id="virtualInvestTable">
+                                <table style="padding:5%;">
+                                    <thead style="font-size:10px;">
+                                    <tr>
+                                        <th class="coin-name sortable" onclick="sortTable(0)">종목명</th>
+                                        <th class="current-price sortable" onclick="sortTable(1)">현재가</th>
+                                        <th class="change-rate sortable" onclick="sortTable(2)">변화률</th>
+                                        <th class="trade-volume sortable" onclick="sortTable(3)">거래대금(24h)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tradeList" style="font-size:13px;">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="container col-6">
+                            <div class="row">
+                                <h2>My Budget</h2>
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>종목명</th>
+                                        <th>금액</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>종목명 값</td>
+                                        <td>금액 값</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <select class="form-select .coinSelect" id="coinSelect">
+                                    <!-- JavaScript를 통해 여기에 옵션이 추가될 것입니다 -->
+                                </select>
+                            </div>
+                            <div class="row">
+                                <select class="form-select .coinSelect" id="coinSelect2">
+                                    <!-- JavaScript를 통해 여기에 옵션이 추가될 것입니다 -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+
+</body>
+</html>

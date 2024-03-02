@@ -1,0 +1,106 @@
+body {
+  font-family: Arial, sans-serif;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  white-space: nowrap;
+  overflow-x: auto;
+  background-color: transparent;
+
+}
+
+th {
+ 	width: 100px;
+	text-align: center;
+	padding: 8px;
+	font-size: larger;
+	color: #7a6ad8;
+}
+td {
+  width: 100px;
+  text-align: center;
+  padding: 8px;
+}
+.up {
+  color: red;
+}
+.down {
+  color: blue;
+}
+.no-change {
+  color: rgb(255, 255, 255);
+}
+.container-table {
+	background-color: rgb(255, 255, 255, 0.5);
+	box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+    border-radius: 6%;
+}
+
+.marketTableName {
+	 text-align: center;
+	 margin: 2%;
+	 color: #7a6ad8;
+	 margin-bottom: -2%;
+}
+
+
+.coin-code-style {
+    color: rgba(255, 255, 255, .8);
+    font-size: 80%;
+ }
+
+/* 화면 너비가 1000px미만으로 가면 주식테이블의 시가,고가, 저가 테이블이 숨겨지도록 설정*/
+@media screen and (max-width: 1000px) {
+  .opening, .high, .low {
+    display: none;
+  }
+  table {
+        font-size: 0.8em; /* 폰트 크기를 줄입니다. 원하는 값으로 조절하세요. */
+    }
+}
+
+/* 화면의 너비가 410px미만으로 가면 주식테이블의 폰트 사이즈 줄어듦*/
+@media screen and (max-width: 410px) {
+    table {
+        font-size: 0.65em; /* 폰트 크기를 줄입니다. 원하는 값으로 조절하세요. */
+    }
+
+    /* 종목명 셀의 너비를 넓힙니다. */
+    .coin-name {
+        width: 30%;
+    }
+
+    /* 현재가와 대비 셀의 너비를 좁힙니다. */
+    .current-price, .comparison {
+        width: 10%;
+    }
+}
+
+  /* 테이블 헤더 스타일 */
+  table thead th {
+    border-bottom: 2px solid white; /* 하얀색 선 */
+  }
+
+
+/* 스크롤바 스타일을 추가합니다 */
+#app {
+    max-height: 625px; /* 스크롤바가 나타나길 원하는 높이 */
+    overflow-y: auto; /* 컨텐츠가 넘칠 때 세로 스크롤바를 표시 */
+}
+
+/* 스크롤바 디자인을 커스텀합니다 */
+#app::-webkit-scrollbar {
+  width: 10px; /* 스크롤바의 너비 */
+}
+
+#app::-webkit-scrollbar-thumb {
+  height: 10%; /* 스크롤바의 길이 */
+  background: rgb(225, 225, 225); /* 스크롤바의 색상 */
+  border-radius: 10px; /* 스크롤바 모서리의 둥근 정도 */
+}
+
+#app::-webkit-scrollbar-track {
+  background: rgba(33, 122, 244, .1); /* 스크롤바 트랙의 배경 색상 */
+}

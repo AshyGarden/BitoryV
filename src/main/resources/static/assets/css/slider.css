@@ -1,0 +1,21 @@
+.swiper-container {
+    width: 18%;
+    height: 200px;
+
+}
+
+.swiper-slide {
+    border-radius: 5%;
+    text-align: center;
+    font-size: 18px;
+    background: rgb(255, 255, 255, 1);
+    width: 30%
+    padding: 10%;
+    box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+    border: 1px solid #ddd; /* 슬라이드에 테두리를 추가하여 간격이 보이게 함 */
+    margin-right: 10px; /* 오른쪽에 마진을 추가하여 간격이 보이게 함 */
+    /* Swiper에서 spaceBetween을 사용하면 margin-right를 설정할 필요가 없습니다. */
+}
+
+
+

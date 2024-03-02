@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template}">
+<head>
+    <meta charset="utf-8">
+    <script src="/assets/js/trade.js"></script>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="main-banner" id="top">
+        <div id="main" class="container" style="margin-top:-2%">
+            <div class="container">
+                <div class="row">
+                    <div class="col-4" style="margin-left:-2%">
+                        <div class="container-table" id="container-table" style="height:625px" >
+                            <h1 class="m-3" style="color:white; text-align:center;">Trade List</h1>
+                            <table style="padding:5%; max-height:500px;">
+                                <thead style="font-size:10px;">
+                                <tr>
+                                    <th class="coin-name sortable" onclick="sortTable(0)">종목명</th>
+                                    <th class="current-price sortable" onclick="sortTable(1)">현재가</th>
+                                    <th class="change-rate sortable" onclick="sortTable(2)">변화률</th>
+                                    <th class="trade-volume sortable" onclick="sortTable(3)">거래대금(24h)</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tradeList" style="font-size:13px;">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-4" style="margin-right:1%">
+
+                        <div class="row">
+                            <div class="container-table" style="height:350px;">
+                                <div class="btn-group mb-3 mt-3" role="group" aria-label="Basic radio toggle button group">
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                                    <label class="btn btn-outline-danger" for="btnradio1"  id="buyButton" >매수</label>
+                                    <!--                                <button type="button" id="buyButton" class="btn btn-danger" style="width:100%">매수</button>-->
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" >
+                                    <label class="btn btn-outline-primary" for="btnradio2"  id="sellButton" >매도</label>
+                                    <!--                                <button type="button" id="sellButton" class="btn btn-primary" style="width:100%">매도</button>-->
+                                </div>
+                            <!-- ======================= 매수 창 ===================================-->
+                            <div id="buyWindow">
+                                <!-- 주문형태 선택 -->
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="orderType" id="limitOrder" value="limit" checked>지정가
+                                            <label class="form-check-label" for="limitOrder"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="orderType" id="marketOrder" value="market">시장가
+                                            <label class="form-check-label" for="marketOrder"></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 지정가 내용 -->
+                                <div id="limitOrderContent">
+                                    <table class="table-order">
+                                        <!-- 지정가 관련 내용의 행들 -->
+                                        <tr>
+                                            <td>주문가격</td>
+                                            <td>
+                                                <input type="number" class="form-control" style="text-align:right;" id="orderPrice" readonly disabled>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>주문수량</td>
+                                            <td>
+                                                <input type="number" class="form-control" style="text-align:right;" id="orderQuantity" placeholder="최소 주문 가능 수량 0.0001 BTC" step="0.0001" value="0">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>수수료</td>
+                                            <td>거래대금의 0.25%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>예상 금액 (수수료 미포함)</td>
+                                            <td>
+                                                <span id="estimatedAmountDisplay" style="text-align:right;"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- 매수 지정가 버튼 -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#OrderModal" style="width:100%;" id="OrderModalFirstButton">
+                                        매수
+                                    </button>
+
+                                    <!-- The Modal -->
+                                    <div class="modal" id="OrderModal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">정말로 매수 하시겠습니까?</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <!-- 매수 버튼 클릭 시 동적으로 추가될 내용 -->
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="OrderModalButton" onclick="updateOrderModal()">매수</button>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 시장가 내용 -->
+                                <div id="marketOrderContent" style="display:none;">
+                                    <table class="table-order">
+                                        <!-- 시장가 관련 내용의 행들 -->
+                                        <tr>
+                                            <td>주문가능</td>
+                                            <td>[[${userAsset}]]</td><!-- 유저의 잔액 조회-->
+                                        </tr>
+                                        <tr>
+                                            <td>주문금액</td>
+                                            <td><input type="text" placeholder="최소 주문금액 10,000 원"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>예상수량</td>
+                                            <td>0 BTC</td>
+                                        </tr>
+                                        <tr>
+                                            <td>수수료</td>
+                                            <td>거래금액의 0.25%</td>
+                                        </tr>
+                                    </table>
+                                    <!-- 매수 지정가 버튼 -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#OrderModal2" style="width:100%;" id="OrderModalFirstButton2">
+                                        매수
+                                    </button>
+
+                                    <!-- The Modal -->
+                                    <div class="modal" id="OrderModal2">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">정말로 매수 하시겠습니까?</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <table style="color:dark;">
+                                                        <tr>
+                                                            <td>비트코인(KRW-BTC)</td>
+                                                            <td>0.0001BTC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>71,135 KRW</td>
+                                                            <td>2024.02.25. 23:25</td>
+                                                        </tr>
+
+                                                    </table>
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="OrderModalButton2">매수</button>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- =========================== 매도 창 ==================================-->
+                            <div id="sellWindow" style="display:none;">
+                                <!-- 주문형태 선택 (지정가, 시장가) -->
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <!-- 지정가 선택 라디오 버튼 -->
+                                            <input type="radio" class="form-check-input" name="sellOrderType" id="limitSellOrder" value="limit" checked>지정가
+                                            <label class="form-check-label" for="limitSellOrder"></label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-check">
+                                            <!-- 시장가 선택 라디오 버튼 -->
+                                            <input type="radio" class="form-check-input" name="sellOrderType" id="marketSellOrder" value="market">시장가
+                                            <label class="form-check-label" for="marketSellOrder"></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 지정가 내용 -->
+                                <div id="limitSellOrderContent">
+                                    <table class="table-order">
+                                        <!-- 테이블 내용은 매도 주문에 필요한 필드를 포함합니다 -->
+                                        <tr>
+                                            <td>주문가격</td>
+                                            <td>
+                                                <input type="number" class="form-control" style="text-align:right;" id="sellOrderPrice" readonly disabled>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>주문수량</td>
+                                            <td>
+                                                <input type="number" class="form-control" style="text-align:right;" id="sellOrderQuantity" placeholder="최소 주문 가능 수량 0.0001 BTC" step="0.0001" value="0">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>수수료</td>
+                                            <td>거래대금의 0.25%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>예상 금액 (수수료 미포함)</td>
+                                            <td>
+                                                <span id="sellestimatedAmountDisplay" style="text-align:right;">0</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!-- 지정가 매도 버튼 -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SellModal" style="width:100%;" id="SellModalFirstButton">
+                                        매도
+                                    </button>
+
+                                    <!-- The Modal -->
+                                    <div class="modal" id="SellModal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">정말로 매도 하시겠습니까?</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <!-- 매도 버튼 클릭 시 동적으로 추가될 내용 -->
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" id="sellModalButton">매도</button>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- 시장가 내용 -->
+                                <div id="marketSellOrderContent" style="display:none;">
+                                    <table class="table-order">
+                                        <!-- 테이블 내용은 시장가 주문에 필요한 필드를 포함합니다 -->
+                                        <tr>
+                                            <td>주문가능</td>
+                                            <td>100,000,000 원</td> <!-- 사용자의 현재 가능한 최대 주문 금액을 표시합니다 -->
+                                        </tr>
+                                        <tr>
+                                            <td>주문금액</td>
+                                            <td><input type="text" placeholder="최소 주문금액 10,000 원"></td> <!-- 사용자가 주문 금액을 입력할 수 있습니다 -->
+                                        </tr>
+                                        <tr>
+                                            <td>예상수량</td>
+                                            <td>0 BTC</td> <!-- 시장가 주문 시 예상되는 코인 수량을 표시합니다 -->
+                                        </tr>
+                                        <tr>
+                                            <td>수수료</td>
+                                            <td>거래금액의 0.25%</td> <!-- 수수료율을 표시합니다 -->
+                                        </tr>
+                                    </table>
+                                    <!-- 지정가 매도 버튼 -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SellModal2" style="width:100%;"  id="SellModalFirstButton2">
+                                        매도
+                                    </button>
+
+                                    <!-- The Modal -->
+                                    <div class="modal" id="SellModal2">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">정말로 매도 하시겠습니까?</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    <table style="color:dark;">
+                                                        <tr>
+                                                            <td>비트코인(KRW-BTC)</td>
+                                                            <td>0.0001BTC</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>71,135 KRW</td>
+                                                            <td>2024.02.25. 23:25</td>
+                                                        </tr>
+
+                                                    </table>
+                                                </div>
+
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="sellModalButton2">매도</button>
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="container-table"style="height: 250px">
+                            <table class="DetailTrade-table">
+                                <tr>
+                                    <td  style="width:15%;" id="coinName2"><h4></h4></td>
+                                    <td style="width:35%;"></td>
+                                    <td style="width:15%;" id="coinCode2"></td>
+                                    <td style="width:35%;"></td>
+                                </tr>
+                                <tr>
+                                    <td id="currentPrice2"><h4></h4></td>
+                                    <td></td>
+                                    <td id="changeRate2"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>거래량</td>
+                                    <td id="volume2">-</td>
+                                    <td>고가 (당일)</td>
+                                    <td id="highPrice2">-</td>
+                                </tr>
+                                <tr>
+                                    <td>거래금액</td>
+                                    <td id="tradeAmount2">-</td>
+                                    <td>저가 (당일)</td>
+                                    <td id="lowPrice2">-</td>
+                                </tr>
+                                <tr>
+                                    <td>채결강도</td>
+                                    <td id="tradeStrength2">-</td>
+                                    <td>전일 종가</td>
+                                    <td id="prevClosingPrice2">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 container-table" style="height:625px">
+                    <h1 class="m-3" style="color:white; text-align:center;">Virtual Investment Log</h1>
+                    <div class="row">
+                        <table style="min-height: 400px">
+                            <thead>
+                            <tr>
+                                <th style="width:25%;">시간</th>
+                                <th style="width:25%;">가격</th>
+                                <th style="width:25%;">수량</th>
+                                <th style="width:25%;">여부</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>시간 값</td>
+                                <td>가격 값</td>
+                                <td>수량 값</td>
+                                <td>구매 여부</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="location.href='/trade'"
+                    style="width: 95%; height: 100px; border-radius: 10px;
+                    background-color: #2ecc71; color: white;
+                    font-size: 48px; margin-top: 2%; margin-left: 2%; "
+                    > Submit & Review Your Investment! </button>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
+
+
+
+

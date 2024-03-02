@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template}">
+<head></head>
+<body>
+<th:block layout:fragment="content">
+    <meta charset="utf-8">
+    <div class="main-banner">
+        <div id="main" class="container">
+            <!-- =========================   실시간 가상화폐 주가 테이블  ==============================-->
+            <div class="container" id="marketTable" style="margin-top:-2%">
+                <div class="container-table p-3">
+                    <div id="app">
+                        <br><br>
+                        <!-- trade 버튼을 컨테이너 안에 넣고 위치 조정 -->
+<!--                        <button type="button" class="btn btn-danger" style="width:20%; position: relative;" onclick="window.location.href='/market/trade';">-->
+<!--                            <h1  style="color:white;">Trade</h1>-->
+<!--                        </button>-->
+                        <h6 class="marketTableName" style="color: white; margin-top:-2%;">실시간 메이저 가상화폐 시세</h6>
+                        <h1 class="marketTableName">
+                            Major Cryptocurrency
+                        </h1>
+                        <br><br>
+                        <table  style="padding:5%;">
+                            <thead>
+                            <tr>
+                                <th class="no" style="width:5%;">No.</th>
+                                <th class="coin-name" style="width:15%;">종목명</th>
+                                <th class="current-price" style="width:15%;">현재가</th>
+                                <th class="comparison" style="width:15%;">대비</th>
+                                <th class="opening" style="width:10%;">시가</th>
+                                <th class="high" style="width:10%;">고가</th>
+                                <th class="low" style="width:10%;">저가</th>
+                                <th style="width:10%;">등락률</th>
+                            </tr>
+                            </thead>
+                            <tbody id="marketList">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

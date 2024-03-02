@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/template}"
+>
+<head>
+
+
+</head>
+<div layout:fragment="content">
+
+
+    <div class="main-banner" id="top">
+        <!-- ***** Title Start ***** -->
+        <div class="container" style="width:100%;">
+            <h1 class="mb-5" style="font-size: 72px; color:white;" align="center">Welcome To Bitory</h1>
+            <h1 class="mb-5" style="font-size: 72px; color:white;" align="center">- The Virtual Investment -</h1>
+        </div>
+        <!-- ***** Title End ***** -->
+        <!-- ***** Button Container Start ***** -->
+        <div class="container" style="width:100%" align="center">
+<!--              <button type="button"-->
+<!--                      onclick="location.href='/predict'"-->
+<!--                      style="width: 450px; height: 150px;-->
+<!--                             background-color: #3498db; color: white;-->
+<!--                             font-size: 48px;-->
+<!--                             margin-top:100px; margin-right:100px;"-->
+<!--              > Predict </button>-->
+              <button type="button"
+                      onclick="location.href='/login'"
+                      style="width: 40%; height: 15%;
+                             background-color: #2ecc71; color: white;
+                             font-size: 72px; margin-top:5%;"
+              > Initialization! </button>
+        </div>
+        <!-- ***** Button Container End ***** -->
+    </div>
+</div>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template}">
+<head>
+    <link rel="stylesheet" type="text/css" href="../../static/css/project.css"/>
+</head>
+
+<th:block layout:fragment="content">
+<div class="main-banner" id="top">
+    <div>
+        <div class="card card-body bg-light offset-3 col-6">
+            <form class="form offset-1 col-10">
+                <div class="mb-3">
+                    <label for="memtype" class="form-label">회원구분</label>
+                    <div class="mb-3">
+                        <select id="memtype" name="memtype" class="form-select border-dark">
+                            <option selected>개인회원</option>
+                            <option>개인 사업자회원</option>
+                            <option>법인 사업자회원</option>
+                            <option>외국인회원</option>
+                        </select>
+                    </div>
+                </div> <!-- member type-->
+
+            <div class="mb-3 d-flex justify-content-between">
+                <label for="chkmail" class="col-form-label text-end">인증방법</label>
+                <div class="">
+                    <input class="form-check-input" type="radio" name="chkmail" id="chkmail" checked>
+                    <label class="form-check-label" for="chkmail">이메일 인증</label>
+                </div>
+            </div> <!-- check email-->
+
+                <div class="mb-3">
+                    <label for="userid" class="col-2 col-form-label">아이디</label>
+                    <input type="text" name="userid" id="userid"
+                           class="form-control border-dark">
+                </div> <!-- userid -->
+
+
+            <div class="mb-3">
+                    <label for="name" class="col-2 col-form-label">이름</label>
+                        <input type="text" name="name" id="name"
+                               class="form-control border-dark">
+            </div> <!-- name -->
+
+            <div class="mb-3">
+                <label for="email" class="col-form-label">이메일</label>
+                <input type="email" class="form-control border-dark" id="email">
+            </div> <!-- email -->
+
+            <div class="d-grid gap-2 b-3">
+                <button type="button" class="btn btn-dark">확인</button>
+            </div> <!-- button -->
+
+            </form>
+        </div>
+    </div>
+</div>
+</th:block>
+
+</html>

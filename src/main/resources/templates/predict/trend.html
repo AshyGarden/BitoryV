@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template}">
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src=""></script> -->
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="main-banner" id="top">
+        <div id="main" class="container">
+            <div class="container" style="margin-top:-3%">
+                <div class="row">
+                    <!-- Market Table Start -->
+                    <div class="container col-6" id="marketTable" >
+                        <div class="container-table" id="virtualInvestTable">
+                            <table style="padding:5%;">
+                                <thead style="font-size:10px;">
+                                <tr>
+                                    <th class="coin-name sortable" onclick="sortTable(0)">종목명</th>
+                                    <th class="current-price sortable" onclick="sortTable(1)">현재가</th>
+                                    <th class="change-rate sortable" onclick="sortTable(2)">변화률</th>
+                                    <th class="trade-volume sortable" onclick="sortTable(3)">거래대금(24h)</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tradeList" style="font-size:13px;">
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button"
+                                onclick="location.href='/trade'"
+                                style="width: 90%; height: 15%; border-radius: 10px;
+                                background-color: #2fcc73; color: white;
+                                font-size: 30px; margin-top: 5%; margin-left: 5%;" >
+                                    Start Virtual Investment!
+                        </button>
+                    </div>
+                    <!-- Market Table End -->
+
+                    <!-- Chart&Graph Start -->
+                    <div class="col-6" style="margin-left:-2%">
+                        <div class="row">
+                            <div class="col">
+                                <div class="container-table p-3">
+                                    <div class="chart-container">
+                                        <canvas id="TradeVolumeChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="container-table p-3">
+                                    <canvas id="RateChangeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <div class="container-table p-3" style="width:100%">
+                                    <h3 style="text-align:center;" >거래량 TOP5</h3>
+                                    <table id="realtimeTradeVolumeTable">
+                                        <thead>
+                                        <tr>
+                                            <th>종목</th>
+                                            <th>거래량</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>비트코인</td>
+                                            <td>1000</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="container-table p-3" style="width:100%">
+                                    <h3 style="text-align:center;">실시간 변동률 TOP 5</h3>
+                                    <table class="market-table"  id="realtimeChangeRateTable2" >
+                                        <thead>
+                                        <tr>
+                                            <th class="market-th" style="text-align:center;">종목명</th>
+                                            <th class="market-th" style="text-align:center;">현재가</th>
+                                            <th class="market-th" style="text-align:center;">변동률</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <!-- JavaScript를 통해 여기에 코인 정보가 동적으로 삽입됩니다. -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chart&Graph End -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

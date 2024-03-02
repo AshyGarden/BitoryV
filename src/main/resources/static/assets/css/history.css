@@ -1,0 +1,18 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+.market-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.market-th, .market-td {
+    padding: 10px;
+    text-align: left;
+}
+
+.rise {
+    color: #4CAF50;
+}
+.fall {
+    color: #F44336;
+}

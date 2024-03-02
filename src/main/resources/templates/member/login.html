@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template}">
+<head>
+</head>
+<body>
+<th:block layout:fragment="content">
+<meta charset="utf-8">
+<div class="main-banner" id="top">
+	<div id="main" class="container">
+        <div class="card card-body bg-light offset-3 col-6">
+            <form class="form offset-1 col-10" id="virtualform" name="virtualform">
+                <h3 style="margin-bottom: 5%" align="center">Start With Virtual Account</h3>
+                <div class="mb-3">
+                    <label for="oti" class="form-label">One Time Initial</label>
+                    <input type="text" class="form-control" id="oti"  name="oti">
+                </div>
+
+                <div class="mb-3">
+                    <label for="otb" class="form-label">One Time Budget(KRW) (최소 10만, 최대 10억까지 입력가능합니다!)</label> <!-- 1회성 현금 예산(KRW) -->
+                    <input type="number" class="form-control" id="otb" name="otb" placeholder="최소 10만, 최대 10억까지 입력가능합니다!" step="100000" value="0">
+                </div>
+
+                <div class="d-grid gap-2 b-3"> <!-- button / trend로 바뀔 예정 -->
+                    <!-- <button type="button" class="btn btn-dark" onclick="location.href='/trend'"> -->
+                    <button type="button" class="btn btn-dark" id="startbtn"> Ready For Virtual Investment!</button> <!-- login button-->
+                </div>
+            </form>
+        </div>
+	</div>
+</div>
+<script src="/assets/js/login.js" charset="utf-8"></script>
+</th:block>
+</body>
+</html>

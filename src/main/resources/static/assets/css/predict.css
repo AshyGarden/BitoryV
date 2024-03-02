@@ -1,0 +1,14 @@
+
+#bo {
+	background: black important!;
+}
+
+.wrapper {
+    width: 90%;
+    height: 80%;
+    background: #FAFAFA;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}
+
