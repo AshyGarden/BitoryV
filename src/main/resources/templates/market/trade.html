@@ -109,7 +109,8 @@
 
                                                 <!-- Modal footer -->
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="OrderModalButton" onclick="updateOrderModal()">매수</button>
+                                                    <button type="button" class="btn btn-primary" id="confirmBuyButton">매수 실행</button>
+<!--                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="OrderModalButton" onclick="updateOrderModal()">매수</button>-->
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
                                                 </div>
 
@@ -124,7 +125,7 @@
                                         <!-- 시장가 관련 내용의 행들 -->
                                         <tr>
                                             <td>주문가능</td>
-                                            <td>[[${userAsset}]]</td><!-- 유저의 잔액 조회-->
+                                            <td th:text="${userBudget} + ' 원'"></td>
                                         </tr>
                                         <tr>
                                             <td>주문금액</td>
@@ -252,7 +253,8 @@
 
                                                 <!-- Modal footer -->
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" id="sellModalButton">매도</button>
+                                                    <button type="button" class="btn btn-primary" id="confirmSellButton">매도 실행</button>
+<!--                                                    <button type="button" class="btn btn-primary"  data-bs-dismiss="modal" id="sellModalButton">매도</button>-->
                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
                                                 </div>
 
@@ -268,7 +270,7 @@
                                         <!-- 테이블 내용은 시장가 주문에 필요한 필드를 포함합니다 -->
                                         <tr>
                                             <td>주문가능</td>
-                                            <td>100,000,000 원</td> <!-- 사용자의 현재 가능한 최대 주문 금액을 표시합니다 -->
+                                            <td th:text="${userBudget} + ' 원'"></td>
                                         </tr>
                                         <tr>
                                             <td>주문금액</td>
@@ -365,31 +367,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-4 container-table" style="height:625px">
+                <div class="col-4 container-table investmentLogTableBody-table" style="height:625px">
                     <h1 class="m-3" style="color:white; text-align:center;">Virtual Investment Log</h1>
                     <div class="row">
                         <table style="min-height: 400px">
                             <thead>
                             <tr>
-                                <th style="width:25%;">시간</th>
-                                <th style="width:25%;">가격</th>
-                                <th style="width:25%;">수량</th>
-                                <th style="width:25%;">여부</th>
+                                <th style="width:30%;">시간</th>
+                                <th style="width:30%;">가격</th>
+                                <th style="width:25%;">종목/수량</th>
+                                <th style="width:15%;">여부</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td>시간 값</td>
-                                <td>가격 값</td>
-                                <td>수량 값</td>
-                                <td>구매 여부</td>
-                            </tr>
+                            <tbody id="investmentLogTableBody">
+                            <!-- 이곳에 매수/매도 로그가 추가됩니다. -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <button type="button" onclick="location.href='/trade'"
+            <button  type="button" onclick="location.href='/virtualInvest'"
                     style="width: 95%; height: 100px; border-radius: 10px;
                     background-color: #2ecc71; color: white;
                     font-size: 48px; margin-top: 2%; margin-left: 2%; "

@@ -16,7 +16,7 @@ const coinNames = {
     'KRW-ATOM': '코스모스'
 };
 
-var tradeVolumes = []; // 체결량 데이터를 저장할 배열
+var accTradePrice24hData = []; // 24시간 누적 거래대금 데이터를 저장할 배열
 
 // WebSocket 연결 생성
 var ws = new WebSocket('wss://api.upbit.com/websocket/v1');
@@ -25,7 +25,7 @@ ws.binaryType = 'arraybuffer'; // 데이터 타입을 arraybuffer로 설정합�
 ws.onopen = function() {
     var subscribeMessage = JSON.stringify([
         { ticket: "test" },
-        { type: "trade", codes: Object.keys(coinNames) }
+        { type: "ticker", codes: Object.keys(coinNames) }
     ]);
     ws.send(subscribeMessage);
 };
@@ -36,44 +36,42 @@ ws.onmessage = function(event) {
     var data = enc.decode(arr);
     var response = JSON.parse(data);
 
-    var code = response.code;
-    var tradeVolume = response.trade_volume;
+    if(response.type === "ticker") {
+        var code = response.code;
+        var accTradePrice24h = response.acc_trade_price_24h; // 24시간 누적 거래대금
 
-    var foundIndex = tradeVolumes.findIndex(item => item.code === code);
-    if (foundIndex !== -1) {
-        tradeVolumes[foundIndex].tradeVolume = tradeVolume;
-    } else {
-        tradeVolumes.push({ code: code, tradeVolume: tradeVolume });
+        var foundIndex = accTradePrice24hData.findIndex(item => item.code === code);
+        if (foundIndex !== -1) {
+            accTradePrice24hData[foundIndex].accTradePrice24h = accTradePrice24h;
+        } else {
+            accTradePrice24hData.push({ code: code, accTradePrice24h: accTradePrice24h });
+        }
+
+        accTradePrice24hData.sort((a, b) => b.accTradePrice24h - a.accTradePrice24h);
+        accTradePrice24hData = accTradePrice24hData.slice(0, 5);
+
+        updateTable();
     }
-
-    tradeVolumes.sort((a, b) => b.tradeVolume - a.tradeVolume);
-    tradeVolumes = tradeVolumes.slice(0, 5);
-
-    updateTable();
 };
 
+
 function updateTable() {
-    // 이 부분은 실제 테이블 요소가 HTML에 존재하는지 확인해야 합니다.
     var tableBody = document.getElementById('realtimeTradeVolumeTable')?.getElementsByTagName('tbody')[0];
-    if (!tableBody) return; // 테이블 요소가 없으면 함수를 종료합니다.
+    if (!tableBody) return;
 
     tableBody.innerHTML = '';
-
-    tradeVolumes.forEach(function(item) {
+    accTradePrice24hData.forEach(function(item) {
         var row = tableBody.insertRow();
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
 
         cell1.innerHTML = coinNames[item.code] + '<br><small>' + item.code + '</small>';
-        cell2.textContent = item.tradeVolume.toFixed(2); // trade_volume 값을 소수점 2자리까지 표시합니다.
+        cell2.textContent = item.accTradePrice24h.toLocaleString('en-US', {maximumFractionDigits: 2}); // 24시간 누적 거래대금을 소수점 두 자리까지 표시
     });
-
-    // 차트 업데이트 로직 추가
-        updateTradeVolumeChart();
 };
 
 ws.onerror = function(error) {
-    console.log('WebSocket Error: ' + error);
+    console.log('WebSocket Error: ', error);
 };
 
 ws.onclose = function() {
@@ -165,13 +163,100 @@ coinWs.onclose = function() {
 
 // <=============================================== Chart =====================================================>
 
-// 거래량 TOP5 차트 업데이트 함수
-function updateTradeVolumeChart() {
+// 24시간 누적 거래대금 TOP5를 가져오는 함수
+async function fetchAccTradePrice24hTop5() {
+    try {
+        const response = await fetch('https://api.upbit.com/v1/ticker?markets=' + Object.keys(coinNames).join(','));
+        const data = await response.json();
+        // 거래대금으로 정렬하고 상위 5개를 선택합니다.
+        const top5AccTradePrice24h = data.sort((a, b) => b.acc_trade_price_24h - a.acc_trade_price_24h).slice(0, 5);
+        return top5AccTradePrice24h.map(item => ({
+            name: coinNames[item.market],
+            accTradePrice24h: item.acc_trade_price_24h
+        }));
+    } catch (error) {
+        console.error('Error fetching acc trade price 24h data:', error);
+        return [];
+    }
+}
+
+// 각 코인의 일별 캔들 데이터를 가져오는 함수
+async function fetchDailyCandle(market) {
+    const url = `https://api.upbit.com/v1/candles/days?market=${market}&count=1`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data[0]; // 가장 최근 일별 캔들 데이터를 반환합니다.
+}
+
+// 각 코인의 전일 종가 변동률을 가져오는 함수
+async function fetchChangeRate(market) {
+    const url = `https://api.upbit.com/v1/candles/days?market=${market}&count=1`;
+    try {
+        const response = await fetch(url);
+        const [data] = await response.json(); // 첫 번째 항목(가장 최근 캔들)만 가져옵니다.
+        return data;
+    } catch (error) {
+        console.error(`Error fetching change rate for market ${market}:`, error);
+        return null; // 에러 발생 시 null 반환
+    }
+}
+
+// 각 코인의 전일 종가 변동률을 가져오는 함수
+async function fetchChangeRate(market) {
+    const url = `https://api.upbit.com/v1/candles/days?market=${market}&count=1`;
+    try {
+        const response = await fetch(url);
+        const [data] = await response.json(); // 첫 번째 항목(가장 최근 캔들)만 가져옵니다.
+        return data;
+    } catch (error) {
+        console.error(`Error fetching change rate for market ${market}:`, error);
+        return null; // 에러 발생 시 null 반환
+    }
+}
+
+// 모든 코인의 변동률을 가져와서 TOP5를 추출하는 함수
+async function fetchChangeRateTop5() {
+    const marketCodes = Object.keys(coinNames);
+    const changeRates = await Promise.all(marketCodes.map(fetchChangeRate));
+
+    // null 값을 필터링하고 변동률로 정렬한 뒤 상위 5개를 선택
+    const top5ChangeRates = changeRates
+        .filter(rate => rate !== null)
+        .sort((a, b) => b.change_rate - a.change_rate)
+        .slice(0, 5)
+        .map(candle => ({
+            name: coinNames[candle.market],
+            changeRate: candle.change_rate
+        }));
+
+    return top5ChangeRates;
+}
+
+
+
+
+// 함수를 호출하여 데이터를 가져옵니다.
+(async () => {
+    const accTradePrice24hTop5 = await fetchAccTradePrice24hTop5(); // 24시간 누적 거래대금 TOP 5 데이터를 가져옵니다.
+    const changeRateTop5 = await fetchChangeRateTop5(); // 변동률 TOP 5 데이터를 가져옵니다.
+
+    updateAccTradePrice24hChart(accTradePrice24hTop5); // 거래대금 차트를 업데이트합니다.
+    updateRateChangeChart(changeRateTop5); // 변동률 차트를 업데이트합니다.
+
+    console.log('24시간 누적 거래대금 TOP 5:', accTradePrice24hTop5);
+    console.log('변동률 TOP 5:', changeRateTop5);
+})();
+
+
+
+
+// 24시간 누적 거래대금 TOP5 차트 업데이트 함수
+function updateAccTradePrice24hChart(data) {
     const chartData = {
-        labels: tradeVolumes.map(item => coinNames[item.code]),
+        labels: data.map(item => item.name), // 코인 명을 라벨로 사용
         datasets: [{
-            label: '거래량 TOP 5',
-            data: tradeVolumes.map(item => item.tradeVolume),
+            label: '24시간 누적 거래대금 TOP 5',
+            data: data.map(item => item.accTradePrice24h), // 24시간 누적 거래대금 값을 사용
             backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(75, 192, 192)',
@@ -182,16 +267,22 @@ function updateTradeVolumeChart() {
         }]
     };
 
-    const ctx = document.getElementById('TradeVolumeChart').getContext('2d');
-    if (window.tradeVolumeChart) {
-        window.tradeVolumeChart.data = chartData;
-        window.tradeVolumeChart.update();
+    const ctx = document.getElementById('AccTradePrice24hChart').getContext('2d');
+    if (window.accTradePrice24hChart) {
+        window.accTradePrice24hChart.data = chartData;
+        window.accTradePrice24hChart.update();
     } else {
-        window.tradeVolumeChart = new Chart(ctx, {
+        window.accTradePrice24hChart = new Chart(ctx, {
             type: 'polarArea',
             data: chartData,
             options: {
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '24시간 누적 거래대금 TOP5'
+                    }
+                }
             }
         });
     }
@@ -200,103 +291,56 @@ function updateTradeVolumeChart() {
 
 
 // 실시간 변동률 차트 업데이트 함수
-function updateRateChangeChart() {
-    // 원하는 라벨 값
-    const customLabels = ["-1%", "-0.5%", "0%", "0.5%", "1%"];
-
-    // 모든 종목에 대한 데이터 포함
-    const allData = coinPriceData.map(item => {
-        return {
-            code: item.code,
-            name: coinNames[item.code],
-            changeRate: item.changeRate
-        };
-    });
-
-    // 변동률이 높은 순으로 정렬
-    const sortedData = allData.sort((a, b) => b.changeRate - a.changeRate);
-
-    // 변동률 데이터 추출
+function updateRateChangeChart(data) {
     const chartData = {
-        labels: sortedData.map(item => item.name), // 종목명을 라벨로 사용
+        labels: data.map(item => item.name), // 종목명을 라벨로 사용
         datasets: [{
             label: '변동률 (%)',
-            data: sortedData.map(item => item.changeRate), // 변동률 값을 사용
+            data: data.map(item => item.changeRate), // 변동률 값을 사용
             backgroundColor: [
+                // 배경색 배열; 데이터 개수에 맞게 조정할 수 있습니다.
                 'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
                 'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
                 'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
                 'rgba(201, 203, 207, 0.2)',
-                'rgba(255, 99, 132, 0.2)'
+                'rgba(54, 162, 235, 0.2)'
             ],
             borderColor: [
+                // 테두리색 배열; 데이터 개수에 맞게 조정할 수 있습니다.
                 'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
                 'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)',
-                'rgb(255, 159, 64)',
                 'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
                 'rgb(201, 203, 207)',
-                'rgb(255, 99, 132)'
+                'rgb(54, 162, 235)'
             ],
-            borderWidth: 1,
-            options: {
-                maintainAspectRatio: false,
-                indexAxis: 'y', // y축을 사용하여 데이터 표시
-                scales: {
-                    x: {
-                        min: -0.3, // x축의 최소값 설정
-                        max: 0.3   // x축의 최대값 설정
-                    }
-                }
-            }
+            borderWidth: 1
         }]
     };
 
     const ctx = document.getElementById('RateChangeChart').getContext('2d');
-        if (window.rateChangeChart) {
-            window.rateChangeChart.data = chartData;
-            window.rateChangeChart.options.scales.y.ticks.font.size = 10; // y축 라벨 글자 크기를 10으로 설정
-            window.rateChangeChart.update();
-        } else {
-            window.rateChangeChart = new Chart(ctx, {
-                type: 'bar',
-                data: chartData,
-                options: {
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    scales: {
-                        y: { // y축 설정
-                            ticks: {
-                                font: {
-                                    size: 10 // 여기에서 글자 크기를 설정합니다.
-                                }
-                            }
-                        },
-                        x: { // 기존의 x축 설정을 유지합니다.
-                            min: -0.3,
-                            max: 0.3
-                        }
+    if (window.rateChangeChart) {
+        window.rateChangeChart.data = chartData;
+        window.rateChangeChart.update();
+    } else {
+        window.rateChangeChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        min: -0.009,
+                        max: 0.009
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '전일 변동률 TOP5' // 여기에 원하는 타이틀 텍스트를 입력하세요.
                     }
                 }
-            });
-        }
+            }
+        });
     }
-
-
-
+}

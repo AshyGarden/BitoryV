@@ -144,6 +144,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentPriceInput) { // 해당 input 요소가 존재하는지 확인합니다.
             currentPriceInput.value = data.trade_price;
         }
+
+            window.selectedCoinCode = data.code; // 이 부분 추가
+
     }
 
     // 상세 테이블 업데이트 함수
@@ -266,6 +269,8 @@ function calculateEstimatedAmount() {
 // <==================== 매도/매수 예상금액  =======================================================>
 // // 매수 버튼 클릭 시
    document.getElementById("OrderModalFirstButton").addEventListener("click", function() {
+
+
        var coinName = document.getElementById("coinName2").textContent.trim();
        var coinCode = document.getElementById("coinCode2").textContent.trim();
        var orderPrice = parseFloat(document.getElementById("orderPrice").value);
@@ -278,15 +283,15 @@ function calculateEstimatedAmount() {
        document.querySelector("#OrderModal .modal-body").innerHTML = `
            <table style="color:dark;">
                <tr>
-                   <td>${coinName}(${coinCode})</td>
-                   <td>${orderQuantity.toFixed(4)}BTC</td>
+                   <td data-coin-code=${coinCode}>${coinName}(${coinCode})</td>
+                   <td>${orderQuantity.toFixed(4)}${coinCode.split('-')[1]}</td>
                </tr>
                <tr>
                    <td>${orderPrice.toLocaleString()} KRW</td>
                    <td>${new Date().toLocaleString()}</td>
                </tr>
                <tr>
-                   <td>예상 금액 (수수료 미포함)</td>
+                   <td>매수 금액 (수수료 미포함)</td>
                    <td>${estimatedAmount.toFixed(2)} KRW</td>
                </tr>
                <tr>
@@ -294,7 +299,7 @@ function calculateEstimatedAmount() {
                    <td>${commission.toFixed(2)} KRW</td>
                </tr>
                <tr>
-                   <td>예상 금액 (수수료 포함)</td>
+                   <td>총 합계 (수수료 포함)</td>
                    <td>${totalAmountWithCommission.toFixed(2)} KRW</td>
                </tr>
            </table>
@@ -302,44 +307,185 @@ function calculateEstimatedAmount() {
 
        // 모달 열기
        $('#OrderModal').modal('show');
+
+
+
    });
 
-   // 매도 버튼 클릭 시
-   document.getElementById("SellModalFirstButton").addEventListener("click", function() {
-       var coinName = document.getElementById("coinName2").textContent.trim();
-       var coinCode = document.getElementById("coinCode2").textContent.trim();
-       var sellOrderPrice = parseFloat(document.getElementById("sellOrderPrice").value);
-       var sellOrderQuantity = parseFloat(document.getElementById("sellOrderQuantity").value);
-       var sellEstimatedAmount = parseFloat(document.getElementById("sellestimatedAmountDisplay").textContent);
-       var commission = sellEstimatedAmount * 0.0025; // 수수료는 거래금액의 0.25%
-       var totalAmountWithCommission = sellEstimatedAmount + commission; // 수수료 포함 금액
 
-       // 모달 내용에 해당 정보를 표시
-       document.querySelector("#SellModal .modal-body").innerHTML = `
-           <table style="color:dark;">
-               <tr>
-                   <td>${coinName}(${coinCode})</td>
-                   <td>${sellOrderQuantity.toFixed(4)}BTC</td>
-               </tr>
-               <tr>
-                   <td>${sellOrderPrice.toLocaleString()} KRW</td>
-                   <td>${new Date().toLocaleString()}</td>
-               </tr>
-               <tr>
-                   <td>예상 금액 (수수료 미포함)</td>
-                   <td>${sellEstimatedAmount.toFixed(2)} KRW</td>
-               </tr>
-               <tr>
-                   <td>수수료 (예상금액의 0.25%)</td>
-                   <td>${commission.toFixed(2)} KRW</td>
-               </tr>
-               <tr>
-                   <td>예상 금액 (수수료 포함)</td>
-                   <td>${totalAmountWithCommission.toFixed(2)} KRW</td>
-               </tr>
-           </table>
-       `;
+// 코인 선택 시 coinCode 업데이트
+document.querySelectorAll('.coin-item').forEach(item => {
+    item.addEventListener('click', function() {
+        const selectedCoinCode = this.getAttribute('data-coin-code');
+        // 선택된 코인 코드를 전역 변수나 적절한 저장소에 저장
+        window.selectedCoinCode = selectedCoinCode;
+        // 필요하다면 추가 로직 실행
+    });
+});
 
-       // 모달 열기
-       $('#SellModal').modal('show');
-   });
+
+
+// 매수/매도 성공 후 테이블에 내용을 추가하고 로컬 스토리지에 저장하는 함수
+function addToInvestmentLog(coinName, coinCode, orderPrice, orderQuantity, totalAmountWithCommission, estimatedAmount, commission, isBuy) {
+    const logTableBody = document.getElementById('investmentLogTableBody');
+    const currentDate = new Date();
+
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td>${currentDate.toLocaleDateString()}<br>${currentDate.toLocaleTimeString()}</td>
+        <td>매수액: ${parseFloat(estimatedAmount).toLocaleString()} 원<br>
+            총액: ${totalAmountWithCommission.toLocaleString()} 원</td>
+        <td>${coinName}<br>${orderQuantity.toFixed(4)} ${coinCode.split('-')[1]}</td>
+        <td>${isBuy ? '매수' : '매도'}</td>
+    `;
+    logTableBody.appendChild(newRow);
+
+    // 로컬 스토리지에 로그 데이터 저장하기
+    const logEntries = JSON.parse(localStorage.getItem('investmentLogs')) || [];
+    logEntries.push({
+        date: currentDate.toLocaleDateString(),
+        time: currentDate.toLocaleTimeString(),
+        price: `${parseFloat(estimatedAmount).toLocaleString()} 원 / ${totalAmountWithCommission.toLocaleString()} 원`,
+        coinName: coinName,
+        quantity: `${orderQuantity.toFixed(4)} ${coinCode.split('-')[1]}`,
+        isBuy: isBuy ? '매수' : '매도'
+    });
+    localStorage.setItem('investmentLogs', JSON.stringify(logEntries));
+}
+
+
+
+// 매수 실행 버튼 클릭 이벤트
+document.getElementById("confirmBuyButton").addEventListener("click", function() {
+    var coinName = document.getElementById("coinName2").textContent.trim();
+    var coinCode = document.getElementById("coinCode2").textContent.trim();
+    var orderPrice = parseFloat(document.getElementById("orderPrice").value);
+    var orderQuantity = parseFloat(document.getElementById("orderQuantity").value);
+    var estimatedAmount = orderPrice * orderQuantity; // 예상 금액을 주문 가격과 수량을 곱하여 계산합니다.
+    var commission = estimatedAmount * 0.0025; // 수수료 계산
+    var totalAmountWithCommission = estimatedAmount + commission; // 총 금액 계산
+
+    // AJAX 요청
+    fetch('/api/buy', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            coinCode: coinCode,
+            orderPrice: orderPrice,
+            orderQuantity: orderQuantity,
+            totalAmount: totalAmountWithCommission
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('매수 주문이 성공적으로 처리되었습니다.');
+        // 성공 응답을 받은 후 로그에 추가
+        addToInvestmentLog(coinName, coinCode, orderPrice, orderQuantity, totalAmountWithCommission, estimatedAmount, commission, true);
+        $('#OrderModal').modal('hide'); // 모달 닫기
+    })
+    .catch(error => {
+        console.error('매수 주문 처리 중 오류 발생:', error);
+        alert('매수 주문 처리 중 오류가 발생했습니다.');
+        $('#OrderModal').modal('hide'); // 모달 닫기
+    });
+});
+
+
+ // 매도 모달 열기 버튼 클릭 이벤트
+ document.getElementById("SellModalFirstButton").addEventListener("click", function() {
+     var coinName = document.getElementById("coinName2").textContent.trim();
+     var coinCode = document.getElementById("coinCode2").textContent.trim();
+     var sellOrderPrice = parseFloat(document.getElementById("sellOrderPrice").value);
+     var sellOrderQuantity = parseFloat(document.getElementById("sellOrderQuantity").value);
+     var sellEstimatedAmount = parseFloat(document.getElementById("sellestimatedAmountDisplay").textContent);
+     var commission = sellEstimatedAmount * 0.0025; // 수수료는 거래금액의 0.25%
+     var totalAmountWithCommission = sellEstimatedAmount + commission; // 수수료 포함 금액
+
+
+
+     // 모달 내용에 해당 정보를 표시
+     document.querySelector("#SellModal .modal-body").innerHTML = `
+         <table style="color:dark;">
+             <tr>
+                 <td>${coinName}(${coinCode})</td>
+                 <td>${sellOrderQuantity.toFixed(4)}BTC</td>
+             </tr>
+             <tr>
+                 <td>${sellOrderPrice.toLocaleString()} KRW</td>
+                 <td>${new Date().toLocaleString()}</td>
+             </tr>
+             <tr>
+                 <td>예상 금액 (수수료 미포함)</td>
+                 <td>${sellEstimatedAmount.toFixed(2)} KRW</td>
+             </tr>
+             <tr>
+                 <td>수수료 (예상금액의 0.25%)</td>
+                 <td>${commission.toFixed(2)} KRW</td>
+             </tr>
+             <tr>
+                 <td>예상 금액 (수수료 포함)</td>
+                 <td>${totalAmountWithCommission.toFixed(2)} KRW</td>
+             </tr>
+         </table>
+     `;
+
+     // 모달 열기
+     $('#SellModal').modal('show');
+ });
+
+ // 매도 실행 버튼 클릭 이벤트
+ document.getElementById("confirmSellButton").addEventListener("click", function() {
+     var coinName = document.getElementById("coinName2").textContent.trim();
+     var coinCode = document.getElementById("coinCode2").textContent.trim();
+     var sellOrderPrice = parseFloat(document.getElementById("sellOrderPrice").value);
+     var sellOrderQuantity = parseFloat(document.getElementById("sellOrderQuantity").value);
+     var sellEstimatedAmount = sellOrderPrice * sellOrderQuantity;
+     var commission = sellEstimatedAmount * 0.0025;
+     var totalAmountWithCommission = sellEstimatedAmount - commission; // 매도에서는 수수료를 차감합니다.
+
+     // AJAX 요청을 통해 서버에 매도 주문 정보 전송
+     fetch('/api/sell', {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+             coinCode: coinCode,
+             sellOrderPrice: sellOrderPrice,
+             sellOrderQuantity: sellOrderQuantity,
+             totalAmount: totalAmountWithCommission
+         })
+     })
+     .then(response => response.json())
+     .then(data => {
+         alert('매도 주문이 성공적으로 처리되었습니다.');
+         addToInvestmentLog(coinName, coinCode, sellOrderPrice, sellOrderQuantity, totalAmountWithCommission, false); // isBuy를 false로 설정하여 매도임을 나타냅니다.
+         $('#SellModal').modal('hide'); // 모달 닫기
+     })
+     .catch(error => {
+         console.error('매도 주문 처리 중 오류 발생:', error);
+         alert('매도 주문 처리 중 오류가 발생했습니다.');
+         $('#SellModal').modal('hide'); // 모달 닫기
+     });
+ });
+
+
+//시장가 주문가능금액
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 페이지 로드가 완료되면 실행됩니다.
+
+    // userBudget 값을 세션에서 가져옵니다.
+    // 이 예제에서는 sessionStorage를 사용했지만, 실제로는 서버 세션 또는 적절한 방법을 사용해야 합니다.
+    var userBudget = sessionStorage.getItem('userBudget') || '0'; // 기본값을 0으로 설정
+
+    // 주문 가능 금액을 표시하는 태그를 찾습니다.
+    var availableOrderAmountTag = document.querySelector('#marketSellOrderContent .table-order tr td:nth-child(2)');
+
+    // 가져온 userBudget 값을 표시합니다.
+    availableOrderAmountTag.textContent = `${parseInt(userBudget).toLocaleString()} 원`;
+});
+
+

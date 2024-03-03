@@ -14,14 +14,15 @@
                         <!-- ***** Logo End ***** -->
 
                         <!-- ***** UserInfo Start ***** -->
-                        <div style="float:right; margin:0px 30px;" class="right_username" id="oti" >User Id</div>
-                        <div style="float:right; margin:0px 30px;" class="right_username" id="otb" >User Budget</div>
+                        <div style="float:right; margin:0px 30px; font-size:30px;" class="right_username user-id" th:text="${session.oti}">User Id</div>
+                        <div style="float:right; margin:0px 30px; font-size:30px;" class="right_username user-budget" th:text="${session.otb}">User Budget</div>
                         <!-- ***** UserInfo End ***** -->
                     </nav>
                 </div>
             </div>
         </div>
     </header>
+
     <script>
 <!--        // localStorage에 저장된 값을 가져오는 함수-->
 <!--        function getOTIFromLocalStorage(key, defaultValue) {-->

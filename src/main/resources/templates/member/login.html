@@ -11,7 +11,7 @@
 	<div id="main" class="container">
         <div class="card card-body bg-light offset-3 col-6">
             <form class="form offset-1 col-10" id="virtualform" name="virtualform">
-                <h3 style="margin-bottom: 5%" align="center">Start With Virtual Account</h3>
+                <h3 style="margin-bottom: 5%; text-align:center">Start With Virtual Account</h3>
                 <div class="mb-3">
                     <label for="oti" class="form-label">One Time Initial</label>
                     <input type="text" class="form-control" id="oti"  name="oti">
@@ -31,6 +31,18 @@
 	</div>
 </div>
 <script src="/assets/js/login.js" charset="utf-8"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 'Ready For Virtual Investment!' 버튼에 클릭 이벤트 리스너 추가
+        document.getElementById('startbtn').addEventListener('click', function() {
+            // 로컬 스토리지에서 'investmentLogs' 데이터 삭제
+            localStorage.removeItem('investmentLogs');
+
+            // 여기에 다른 로직이 필요하다면 추가하세요. 예를 들어, 다른 페이지로 리디렉션 등
+        });
+    });
+</script>
+
 </th:block>
 </body>
 </html>

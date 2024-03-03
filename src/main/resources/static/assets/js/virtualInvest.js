@@ -1,19 +1,63 @@
-// 코인 이름 정보
-const coinNames3 = {
-  'KRW-BTC': '비트코인', 'KRW-ETH': '이더리움', 'KRW-SOL': '솔라나',
-  'KRW-XRP': '리플', 'KRW-ETC': '이더리움 클래식', 'KRW-LINK': '체인링크',
-  'KRW-DOGE': '도지코인', 'KRW-ADA': '카르다노', 'KRW-AVAX': '아발란체',
-  'KRW-MATIC': '폴리곤', 'KRW-DOT': '폴카닷', 'KRW-TRX': '트론',
-  'KRW-SHIB': '시바이누', 'KRW-ATOM': '코스모스'
-};
 
-// select 요소를 가져옵니다.
-const selectElement = document.getElementById('coinSelect');
 
-// coinNames3 객체를 반복하여 각 코인에 대한 option 요소를 생성합니다.
-for (const [value, text] of Object.entries(coinNames3)) {
-  const option = document.createElement('option');
-  option.value = value;
-  option.textContent = text;
-  selectElement.appendChild(option);
+document.addEventListener('DOMContentLoaded', function() {
+    const logEntries = JSON.parse(localStorage.getItem('investmentLogs')) || [];
+    const logTableBody = document.getElementById('investmentLogTableBody');
+
+    logEntries.forEach(entry => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${entry.date}<br>${entry.time}</td>
+            <td>${entry.price}</td>
+            <td>${entry.coinName}<br>${entry.quantity}</td>
+            <td>${entry.isBuy}</td>
+        `;
+        logTableBody.appendChild(newRow);
+    });
+});
+
+
+//1. JavaScript로 로컬 스토리지에서 데이터를 불러와 JSON으로 변환
+
+function getInvestmentLogs() {
+    const logs = localStorage.getItem('investmentLogs');
+    console.log(JSON.parse(logs));
+    console.log(typeof(JSON.parse(logs)));
+
+    return JSON.parse(logs) || [];
+}
+
+//2. AJAX를 사용하여 이 JSON 데이터를 Python으로 전송
+// 로컬 스토리지에서 로그 데이터를 불러와 서버로 전송
+function sendInvestmentLogs() {
+    const logs = localStorage.getItem('investmentLogs');
+    fetch('http://127.0.0.1:5000/process-logs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: logs // 로컬 스토리지에서 가져온 로그 데이터를 문자열 그대로 전송
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Server response:', data);
+        displayProcessedLogs(data); // 서버로부터 받은 응답을 처리
+    })
+    .catch(error => {
+        console.error('Error sending logs:', error);
+    });
+}
+
+
+// 예시용 함수 호출
+const logs = getInvestmentLogs();
+sendInvestmentLogs(logs);
+
+
+//5. JavaScript로 응답 받은 데이터를 HTML에 표시
+// 서버로부터 받은 응답 데이터를 화면에 표시
+function displayProcessedLogs(data) {
+    // 예시: 서버 응답을 페이지의 특정 부분에 표시
+    const responseContainer = document.getElementById('responseContainer');
+    responseContainer.textContent = JSON.stringify(data, null, 2);
 }
