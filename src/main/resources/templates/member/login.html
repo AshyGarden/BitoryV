@@ -9,22 +9,24 @@
 <meta charset="utf-8">
 <div class="main-banner" id="top">
 	<div id="main" class="container">
-        <div class="card card-body bg-light offset-3 col-6">
+        <div class="card card bg-light offset-3 col-6"
+                style="height:600px; width:1000px; border-radius:5%">
             <form class="form offset-1 col-10" id="virtualform" name="virtualform">
-                <h3 style="margin-bottom: 5%; text-align:center">Start With Virtual Account</h3>
+                <h2 style="margin: 8%; text-align:center">Start With Virtual Account</h2>
                 <div class="mb-3">
-                    <label for="oti" class="form-label">One Time Initial</label>
-                    <input type="text" class="form-control" id="oti"  name="oti">
+                    <label for="oti" class="form-label" style="font-size:20px"> <i class="fa-solid fa-user ms-2"></i> One Time Initial ID</label>
+                    <input type="text" class="form-control" id="oti" name="oti" placeholder="사용하실 ID값을 입력해주세요" style="height:80px; font-size:20px;" pattern="^[a-zA-Z0-9]+$" title="Only English letters and numbers are allowed">
                 </div>
-
+                <br>
                 <div class="mb-3">
-                    <label for="otb" class="form-label">One Time Budget(KRW) (최소 10만, 최대 10억까지 입력가능합니다!)</label> <!-- 1회성 현금 예산(KRW) -->
-                    <input type="number" class="form-control" id="otb" name="otb" placeholder="최소 10만, 최대 10억까지 입력가능합니다!" step="100000" value="0">
-                </div>
+                    <label for="otb" class="form-label" style="font-size:20px"><i class="fa-solid fa-coins ms-2"></i> One Time Budget(KRW)</label> <!-- 1회성 현금 예산(KRW) -->
+                    <input type="number" class="form-control" id="otb" name="otb" placeholder="최소 10만, 최대 10억까지 입력가능합니다!" step="100000" style="height:80px; font-size:20px;" min="100000" max="1000000000">
 
+                </div>
+                <br>
                 <div class="d-grid gap-2 b-3"> <!-- button / trend로 바뀔 예정 -->
                     <!-- <button type="button" class="btn btn-dark" onclick="location.href='/trend'"> -->
-                    <button type="button" class="btn btn-dark" id="startbtn"> Ready For Virtual Investment!</button> <!-- login button-->
+                    <button type="button" class="btn btn-warning" id="startbtn" style="font-size:25px; font-weight:bolder"> Ready For Virtual Investment!</button> <!-- login button-->
                 </div>
             </form>
         </div>
