@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", async () => {		// select 태그의
 
 async function fetchData () {									// 예측 가격과 일시 데이터를 요청 및 전달받는 함수
     let ticker1 = tickerSelect1.value
-    let ticker2 = tickerSelect2.value
+    // let ticker2 = tickerSelect2.value
 
 	try {
 	    // fetch 함수를 사용하여 지정된 URL로 POST 요청을 보냅니다.
-	    const response = await fetch(`http://127.0.0.1:8000/responsePrice/${ticker1}/${ticker2}`, {
+	    const response = await fetch(`http://127.0.0.1:8000/responsePrice/${ticker1}`, {
 	        method: 'GET',
 	        headers: {
 	            'Content-Type': 'application/json',
@@ -25,18 +25,18 @@ async function fetchData () {									// 예측 가격과 일시 데이터를 �
 	    });
 	    // 응답을 기다리고 JSON으로 파싱합니다.
 	    const result = await response.json();
-
-	    function convertDates(obj) {
-            if (obj.days) {
-                const newDays = {};
-                for (const key in obj.days) {
-                    if (obj.days.hasOwnProperty(key)) {
-                        newDays[key] = new Date(obj.days[key]);
-                    }
-                }
-                obj.days = newDays;
-            }
-        }
+//
+//	    function convertDates(obj) {
+//            if (obj.days) {
+//                const newDays = {};
+//                for (const key in obj.days) {
+//                    if (obj.days.hasOwnProperty(key)) {
+//                        newDays[key] = new Date(obj.days[key]);
+//                    }
+//                }
+//                obj.days = newDays;
+//            }
+//        }
 
 //	    result.forEach(array => {
 //            // 배열 내의 각 객체에 대해 "convertDates" 함수 호출
@@ -54,18 +54,18 @@ async function fetchData () {									// 예측 가격과 일시 데이터를 �
 async function handleFetchDataAndPrepareChart() {
         // select 태그로 선택한 ticker1, 2
         let ticker1 = tickerSelect1.value
-        let ticker2 = tickerSelect2.value
+        // let ticker2 = tickerSelect2.value
 
     try {
        const arrays = await fetchData();        // fetchData함수로 가상화폐 가격과 예측가격을 가져옴
        //console.log(arrays);
        //console.log(arrays[0]);
-       console.log(arrays[0][0], d => d.days);
-       console.log(arrays[0][0], d => d.value);
+       console.log(arrays[0], d => d.days);
+       console.log(arrays[0], d => d.value);
 
-       dataArray1 = arrays[0][0].slice(0, 40);
-       dataArray2 = arrays[0][0].slice(40, 4561);
-       console.log(typeof(arrays[0][0].length));
+       dataArray1 = arrays[0].slice(0, 40);
+       dataArray2 = arrays[0].slice(40, 4561);
+       console.log(typeof(arrays[0].length));
        console.log(dataArray1);
        console.log(dataArray2);
 
@@ -236,14 +236,14 @@ d3.max(data3.map(d => d[0]))
 // var dataArray = [Object.values(arrays[0][0].days),Object.values(arrays[0][0].value)]
 
 
-var xValue = d3.scaleTime().domain([new Date(d3.min(arrays[0][0].map(d => d.days))), new Date(d3.max(arrays[0][0].map(d => d.days)))]).range([0, width-50])
+var xValue = d3.scaleTime().domain([new Date(d3.min(dataArray1.map(d => d.days))), new Date(d3.max(dataArray1.map(d => d.days)))]).range([0, width-50])
 // var xScale = d3.scaleLinear().domain([0, d3.max(data)]).range([0, width-50])
-var xScale = d3.scaleTime().domain([new Date(d3.min(arrays[0][0].map(d => d.days))), new Date(d3.max(arrays[0][0].map(d => d.days)))]).range([0, width-50])
+var xScale = d3.scaleTime().domain([new Date(d3.min(dataArray1.map(d => d.days))), new Date(d3.max(dataArray1.map(d => d.days)))]).range([0, width-50])
 var xAxis = d3.axisBottom().scale(xScale).tickFormat(d3.timeFormat('%m-%d-h%H'));
 // var xAxis = d3.axisBottom().tickFormat(d3.timeFormat('%d-%H')).scale(xScale).ticks(20, "s");
 
-var yValue = d3.scaleLinear().domain([d3.max(arrays[0][0].map(d => d.value)), d3.min(arrays[0][0].map(d => d.value))]).range([0, height-50])
-var yScale = d3.scaleLinear().domain([d3.max(arrays[0][0].map(d => d.value)), d3.min(arrays[0][0].map(d => d.value))]).range([0, height-50])
+var yValue = d3.scaleLinear().domain([d3.max(dataArray1.map(d => d.value)), d3.min(dataArray1.map(d => d.value))]).range([0, height-50])
+var yScale = d3.scaleLinear().domain([d3.max(dataArray1.map(d => d.value)), d3.min(dataArray1.map(d => d.value))]).range([0, height-50])
 var yAxis = d3.axisLeft().scale(yScale);
 
 var line = d3.line()
@@ -284,7 +284,7 @@ var path = svg2.append('g')
     .attr("transform", "translate(80, 20)")
     .append('path')
         // .data([arrays[1]["value"]])
-        .data([arrays[0][0]])
+        .data([dataArray1])
         .attr('class', 'line')
         .attr("fill", "none")
         .attr("stroke", "steelblue")
@@ -308,7 +308,7 @@ tick(0);
         path.attr('d', line)
             .attr('transform', null)
             .transition()
-                .duration(500)
+                .duration(1000)
                 .ease(d3.easeLinear)
                 // .attr('transform', 'translate(' + xScale(-1) + ',0)')
                 .attr('transform', 'translate(-185 ,0)')
