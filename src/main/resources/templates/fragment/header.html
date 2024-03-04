@@ -71,9 +71,10 @@
     const initialUserBudget = parseFloat(localStorage.getItem('otb')) || 0;
     const userBalance = initialUserBudget - totalBuy + totalSell;
 
-    document.getElementById('userBuyTotal').textContent = `Buy: ${totalBuy.toLocaleString()} 원`;
-    document.getElementById('userSellTotal').textContent = `Sell: ${totalSell.toLocaleString()} 원`;
-    document.getElementById('userBalance').textContent = `잔액: ${userBalance.toLocaleString()} 원`;
+    document.getElementById('userBuyTotal').innerHTML = `<i class="fa-solid fa-cash-register"></i> Buy: ${totalBuy.toLocaleString()} 원`;
+    document.getElementById('userSellTotal').innerHTML = `<i class="fa-solid fa-cash-register"></i> Sell: ${totalSell.toLocaleString()} 원`;
+    document.getElementById('userBalance').innerHTML = `<i class="fa-solid fa-wallet"></i> 잔액: ${userBalance.toLocaleString()} 원`;
+
 }
 
     // 매수 또는 매도 작업 성공 후 호출
