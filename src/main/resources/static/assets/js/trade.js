@@ -333,11 +333,11 @@ function addToInvestmentLog(coinName, coinCode, orderPrice, orderQuantity, total
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
         <td>${currentDate.toLocaleDateString()}<br>${currentDate.toLocaleTimeString()}</td>
-        <td>매수액: ${parseFloat(estimatedAmount).toLocaleString()} 원<br>
-            총액: ${totalAmountWithCommission.toLocaleString()} 원</td>
+        <td>${isBuy ? '매수액' : '매도액'}: ${estimatedAmount.toLocaleString()} 원<br>총액: ${totalAmountWithCommission.toLocaleString()} 원</td>
         <td>${coinName}<br>${orderQuantity.toFixed(4)} ${coinCode.split('-')[1]}</td>
         <td>${isBuy ? '매수' : '매도'}</td>
     `;
+
     logTableBody.appendChild(newRow);
 
     // 로컬 스토리지에 로그 데이터 저장하기
@@ -345,13 +345,14 @@ function addToInvestmentLog(coinName, coinCode, orderPrice, orderQuantity, total
     logEntries.push({
         date: currentDate.toLocaleDateString(),
         time: currentDate.toLocaleTimeString(),
-        price: `${parseFloat(estimatedAmount).toLocaleString()} 원 / ${totalAmountWithCommission.toLocaleString()} 원`,
+        price: `${estimatedAmount.toLocaleString()} 원 / ${totalAmountWithCommission.toLocaleString()} 원`,
         coinName: coinName,
         quantity: `${orderQuantity.toFixed(4)} ${coinCode.split('-')[1]}`,
-        isBuy: isBuy ? '매수' : '매도'
+        isBuy: isBuy ? true : false // 여기를 수정
     });
     localStorage.setItem('investmentLogs', JSON.stringify(logEntries));
 }
+
 
 
 
@@ -361,9 +362,9 @@ document.getElementById("confirmBuyButton").addEventListener("click", function()
     var coinCode = document.getElementById("coinCode2").textContent.trim();
     var orderPrice = parseFloat(document.getElementById("orderPrice").value);
     var orderQuantity = parseFloat(document.getElementById("orderQuantity").value);
-    var estimatedAmount = orderPrice * orderQuantity; // 예상 금액을 주문 가격과 수량을 곱하여 계산합니다.
-    var commission = estimatedAmount * 0.0025; // 수수료 계산
-    var totalAmountWithCommission = estimatedAmount + commission; // 총 금액 계산
+    var estimatedAmount = orderPrice * orderQuantity;
+    var commission = estimatedAmount * 0.0025;
+    var totalAmountWithCommission = estimatedAmount + commission;
 
     // AJAX 요청
     fetch('/api/buy', {
@@ -381,16 +382,17 @@ document.getElementById("confirmBuyButton").addEventListener("click", function()
     .then(response => response.json())
     .then(data => {
         alert('매수 주문이 성공적으로 처리되었습니다.');
-        // 성공 응답을 받은 후 로그에 추가
         addToInvestmentLog(coinName, coinCode, orderPrice, orderQuantity, totalAmountWithCommission, estimatedAmount, commission, true);
-        $('#OrderModal').modal('hide'); // 모달 닫기
+        $('#OrderModal').modal('hide');
+        updateHeaderInvestmentInfo(); // 헤더 정보 업데이트
     })
     .catch(error => {
         console.error('매수 주문 처리 중 오류 발생:', error);
         alert('매수 주문 처리 중 오류가 발생했습니다.');
-        $('#OrderModal').modal('hide'); // 모달 닫기
+        $('#OrderModal').modal('hide');
     });
 });
+
 
 
  // 매도 모달 열기 버튼 클릭 이벤트
@@ -463,6 +465,7 @@ document.getElementById("confirmBuyButton").addEventListener("click", function()
          alert('매도 주문이 성공적으로 처리되었습니다.');
          addToInvestmentLog(coinName, coinCode, sellOrderPrice, sellOrderQuantity, totalAmountWithCommission, false); // isBuy를 false로 설정하여 매도임을 나타냅니다.
          $('#SellModal').modal('hide'); // 모달 닫기
+         updateHeaderInvestmentInfo(); // 헤더 정보 업데이트
      })
      .catch(error => {
          console.error('매도 주문 처리 중 오류 발생:', error);
@@ -489,3 +492,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    var userBudget = localStorage.getItem('otb') || '0'; // localStorage에서 사용자의 예산을 가져옵니다.
+
+    // 모든 "주문가능" 금액을 표시하는 요소를 찾습니다.
+    var availableAmountTags = document.querySelectorAll('.availableAmount');
+
+    // 각 요소의 내용을 업데이트합니다.
+    availableAmountTags.forEach(function(tag) {
+        tag.textContent = `${parseFloat(userBudget).toLocaleString()} 원`; // 가져온 예산을 표시합니다.
+    });
+});
+
+
+// <================================ 시장가 매수/매도 ================================================>

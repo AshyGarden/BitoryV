@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-4" style="margin-left:-2%">
                         <div class="container-table" id="container-table" style="height:625px" >
-                            <h1 class="m-3" style="color:white; text-align:center;">Trade List</h1>
+                            <h1 class="m-3" style="color:black; text-align:center;">Trade List</h1>
                             <table style="padding:5%; max-height:500px;">
                                 <thead style="font-size:10px;">
                                 <tr>
@@ -129,15 +129,15 @@
                                         <!-- 시장가 관련 내용의 행들 -->
                                         <tr>
                                             <td>주문가능</td>
-                                            <td th:text="${userBudget} + ' 원'"></td>
+                                            <td class="availableAmount">0 원</td> <!-- 여기에 id를 추가합니다 -->
                                         </tr>
                                         <tr>
                                             <td>주문금액</td>
-                                            <td><input type="text" placeholder="최소 주문금액 10,000 원"></td>
+                                            <td><input type="text" id="orderAmount" placeholder="주문 금액 입력"></td>
                                         </tr>
                                         <tr>
                                             <td>예상수량</td>
-                                            <td>0 BTC</td>
+                                            <td><div id="expectedQuantity">0</div></td>
                                         </tr>
                                         <tr>
                                             <td>수수료</td>
@@ -274,7 +274,7 @@
                                         <!-- 테이블 내용은 시장가 주문에 필요한 필드를 포함합니다 -->
                                         <tr>
                                             <td>주문가능</td>
-                                            <td th:text="${userBudget} + ' 원'"></td>
+                                            <td class="availableAmount">0 원</td> <!-- 여기에 id를 추가합니다 -->
                                         </tr>
                                         <tr>
                                             <td>주문금액</td>
@@ -372,7 +372,7 @@
                     </div>
                 </div>
                 <div class="col-4 container-table investmentLogTableBody-table" style="height:625px">
-                    <h1 class="m-3" style="color:white; text-align:center;">Virtual Investment Log</h1>
+                    <h1 class="m-3" style="color:black; text-align:center;">Transaction List</h1>
                     <div class="row">
                         <table style="min-height: 400px">
                             <thead>

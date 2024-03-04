@@ -221,3 +221,41 @@ thead th {
 .investmentLogTableBody-table::-webkit-scrollbar-track {
   background: rgba(33, 122, 244, .1); /* 스크롤바 트랙의 배경 색상 */
 }
+
+
+
+
+
+/* 로그 테이블 바디 스타일링 */
+#investmentLogTableBody {
+
+    flex-direction: column-reverse; /* 로우를 역순으로 배치 */
+    gap: 10px; /* 로우 사이 간격 설정 */
+    padding-top: 10px; /* 테이블 상단 여백 추가 */
+}
+
+
+
+/* 로그 테이블 로우 스타일링 */
+#investmentLogTableBody tr {
+    border-bottom: 1px solid #ddd; /* 각 로우에 회색 밑줄 추가 */
+    text-align: center; /* 로우의 텍스트 가운데 정렬 */
+}
+
+/* 로그 테이블 로우의 마지막 로우의 밑줄 제거 */
+#investmentLogTableBody tr:last-child {
+
+}
+
+/* 로그 테이블 헤더 스타일링 */
+#investmentLogTableBody th {
+    border-bottom: 2px solid #ddd; /* 헤더에 두꺼운 회색 밑줄 추가 */
+    text-align: center; /* 헤더의 텍스트 가운데 정렬 */
+}
+
+/* 로그 테이블 헤더와 바디의 th 너비 맞추기 */
+#investmentLogTableBody th,
+#investmentLogTableBody td {
+    width: 25%; /* 너비 조정 */
+    padding: 8px; /* 셀 패딩 추가 */
+}

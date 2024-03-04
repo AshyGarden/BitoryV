@@ -128,7 +128,7 @@ import matplotlib.pyplot as plt
 import pyupbit
 from prophet import Prophet as prh
 from prophet.plot import add_changepoints_to_plot
-from function import *
+# from function import *
 
 app = FastAPI()
 

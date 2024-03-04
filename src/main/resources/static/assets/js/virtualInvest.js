@@ -31,15 +31,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
-document.addEventListener('DOMContentLoaded', async function() {
-    // 로컬 스토리지에서 투자 로그 데이터 가져오기
-    const logEntries = getInvestmentLogs();
-
-    // 서버로 로그 데이터 전송
-    await sendInvestmentLogs(logEntries);
-});
-
-// 서버로 투자 로그 데이터 전송하는 함수
 async function sendInvestmentLogs(logEntries) {
     const logsText = getInvestmentLogsText(logEntries);
 

@@ -14,9 +14,20 @@
                         <!-- ***** Logo End ***** -->
 
                         <!-- ***** UserInfo Start ***** -->
-                        <div style="float:right; margin:0px 30px; font-size:30px;" class="right_username user-id" th:text="${session.oti}">User Id</div>
-                        <div style="float:right; margin:0px 30px; font-size:30px;" class="right_username user-budget" th:text="${session.otb}">User Budget</div>
+                        <!-- 사용자 ID 표시 -->
+                        <div style="float:right; color:white; margin:0px 30px; font-size:30px;" class="right_username user-id" th:text="${session.oti}+'님'">User Id</div>
+
+                        <!-- 사용자 예산 표시 -->
+                        <div style="float:right; color:white; margin:0px 30px; font-size:20px;" class="right_username user-budget" id="user-budget">User Budget</div>
                         <!-- ***** UserInfo End ***** -->
+
+                        <!-- User의 매수/매도총합 -->
+                        <!-- User의 매수/매도총합 및 잔액 -->
+                        <div id="userBuyTotal" style="float:right; color:white; margin:0px 100px; font-size:20px;">User Buy</div>
+                        <div id="userSellTotal" style="float:right; color:white; margin:0px 30px; font-size:20px;">User Sell</div>
+                        <div id="userBalance" style="float:right; color:white; margin:0px 30px; font-size:20px;">User 잔액</div>
+
+
                     </nav>
                 </div>
             </div>
@@ -24,32 +35,53 @@
     </header>
 
     <script>
-<!--        // localStorage에 저장된 값을 가져오는 함수-->
-<!--        function getOTIFromLocalStorage(key, defaultValue) {-->
-<!--            // localStorage에서 해당 키로 저장된 값을 가져옴-->
-<!--            const storedValue = localStorage.getItem('oti');-->
 
-<!--            // 만약 값이 존재한다면 해당 값을 반환, 아니면 기본값 반환-->
-<!--            return storedValue !== null ? storedValue : defaultValue;-->
-<!--        }-->
+        // 페이지 로드 시 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            // localStorage에서 사용자 아이디와 예산을 가져옴
+            const userId = localStorage.getItem('oti') || 'Null'; // 기본값 설정
+            const userBudget = parseFloat(localStorage.getItem('otb')) || 0; // 기본값 설정
 
-<!--        function getOTBFromLocalStorage(key, defaultValue) {-->
-<!--            // localStorage에서 해당 키로 저장된 값을 가져옴-->
-<!--            const storedValue = localStorage.getItem(key);-->
+            // 가져온 값으로 헤더에 사용자 정보 표시
+            const userIdElement = document.querySelector('.right_username.user-id');
+            const userBudgetElement = document.querySelector('.right_username.user-budget');
 
-<!--            // 만약 값이 존재한다면 해당 값을 반환, 아니면 기본값 반환-->
-<!--            return storedValue !== null ? storedValue : defaultValue;-->
-<!--        }-->
+            // 아이콘과 텍스트를 함께 추가하여 표시
+            userIdElement.innerHTML = '<i class="fa-solid fa-circle-user"></i> ' + userId;
+            userBudgetElement.innerHTML = '<i class="fa-solid fa-coins"></i> ' + '초기 자산 : ' + userBudget.toLocaleString() + ' 원';
+        });
 
-<!--        // 페이지 로드 시 실행-->
-<!--        window.onload = function() {-->
-<!--            // localStorage에서 'myValue'라는 키로 저장된 값을 가져옴-->
-<!--            const storedID = getOTIFromLocalStorage(oti, 'Null');-->
-<!--            const storedBdg = getOTBFromLocalStorage(otb, 'Null');-->
 
-<!--            // 가져온 값을 화면에 표시-->
-<!--            document.body.innerHTML-->
-<!--        };-->
+        <!--유저의 매수/매도 총계, 잔액 -->
+        function updateHeaderInvestmentInfo() {
+    const investmentLogs = JSON.parse(localStorage.getItem('investmentLogs')) || [];
+    let totalBuy = 0;
+    let totalSell = 0;
+
+    investmentLogs.forEach(log => {
+        // 가격 정보에서 "원"을 제외하고 숫자만 추출
+        const amount = parseFloat(log.price.split(' ')[0].replace(/,/g, ''));
+        if (log.isBuy) { // 불리언 값으로 비교
+            totalBuy += amount;
+        } else {
+            totalSell += amount;
+        }
+    });
+
+    const initialUserBudget = parseFloat(localStorage.getItem('otb')) || 0;
+    const userBalance = initialUserBudget - totalBuy + totalSell;
+
+    document.getElementById('userBuyTotal').textContent = `Buy: ${totalBuy.toLocaleString()} 원`;
+    document.getElementById('userSellTotal').textContent = `Sell: ${totalSell.toLocaleString()} 원`;
+    document.getElementById('userBalance').textContent = `잔액: ${userBalance.toLocaleString()} 원`;
+}
+
+    // 매수 또는 매도 작업 성공 후 호출
+    // 예시: 매수나 매도 버튼 클릭 이벤트의 성공 콜백 내
+    updateHeaderInvestmentInfo();
+
+
+
     </script>
     <!-- ***** Header Area End ***** -->
 </th:block>
