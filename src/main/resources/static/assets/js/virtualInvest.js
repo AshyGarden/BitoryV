@@ -1,6 +1,8 @@
+document.addEventListener('DOMContentLoaded', async function() {
+    // 로딩 이미지 표시
+    const loadingElement = document.getElementById('loading');
+    loadingElement.style.display = 'block';
 
-
-document.addEventListener('DOMContentLoaded', function() {
     const logEntries = JSON.parse(localStorage.getItem('investmentLogs')) || [];
     const logTableBody = document.getElementById('investmentLogTableBody');
 
@@ -14,50 +16,75 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         logTableBody.appendChild(newRow);
     });
+
+    try {
+        // 서버로 로그 데이터 전송
+        const responseData = await sendInvestmentLogs(logEntries);
+
+        // 서버 응답 데이터를 HTML에 표시
+        displayResponseData(responseData);
+    } catch (error) {
+        console.error('에러 발생:', error);
+    } finally {
+        // 로딩 이미지 제거
+        loadingElement.style.display = 'none';
+    }
 });
 
+document.addEventListener('DOMContentLoaded', async function() {
+    // 로컬 스토리지에서 투자 로그 데이터 가져오기
+    const logEntries = getInvestmentLogs();
 
-//1. JavaScript로 로컬 스토리지에서 데이터를 불러와 JSON으로 변환
+    // 서버로 로그 데이터 전송
+    await sendInvestmentLogs(logEntries);
+});
 
+// 서버로 투자 로그 데이터 전송하는 함수
+async function sendInvestmentLogs(logEntries) {
+    const logsText = getInvestmentLogsText(logEntries);
+
+    try {
+        const response = await fetch('http://localhost:8000/process-text-logs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',  // 요청 헤더를 JSON으로 설정
+            },
+            body: JSON.stringify({ logsText }),
+        });
+        const data = await response.json();
+        console.log('서버 응답:', data);
+        return data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// 서버 응답 데이터를 HTML에 표시하는 함수
+function displayResponseData(data) {
+    const responseDataElement = document.getElementById('response-data');
+    responseDataElement.innerHTML = markdownToHTML(data.data);
+}
+
+// 로컬 스토리지에서 투자 로그 데이터를 가져오는 함수
 function getInvestmentLogs() {
     const logs = localStorage.getItem('investmentLogs');
-    console.log(JSON.parse(logs));
-    console.log(typeof(JSON.parse(logs)));
-
     return JSON.parse(logs) || [];
 }
 
-//2. AJAX를 사용하여 이 JSON 데이터를 Python으로 전송
-// 로컬 스토리지에서 로그 데이터를 불러와 서버로 전송
-function sendInvestmentLogs() {
-    const logs = localStorage.getItem('investmentLogs');
-    fetch('http://127.0.0.1:5000/process-logs', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: logs // 로컬 스토리지에서 가져온 로그 데이터를 문자열 그대로 전송
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Server response:', data);
-        displayProcessedLogs(data); // 서버로부터 받은 응답을 처리
-    })
-    .catch(error => {
-        console.error('Error sending logs:', error);
-    });
+// 로컬 스토리지에서 투자 로그 데이터를 가져와 value 값만 추출하여 텍스트로 변환
+function getInvestmentLogsText(logEntries) {
+    // 각 로그 항목의 value만 추출하여 텍스트로 변환
+    const logsText = logEntries.map(entry => `${entry.date} ${entry.time} ${entry.price} ${entry.coinName} ${entry.quantity} ${entry.isBuy}`).join('; ');
+    return logsText;
 }
 
-
-// 예시용 함수 호출
-const logs = getInvestmentLogs();
-sendInvestmentLogs(logs);
-
-
-//5. JavaScript로 응답 받은 데이터를 HTML에 표시
-// 서버로부터 받은 응답 데이터를 화면에 표시
-function displayProcessedLogs(data) {
-    // 예시: 서버 응답을 페이지의 특정 부분에 표시
-    const responseContainer = document.getElementById('responseContainer');
-    responseContainer.textContent = JSON.stringify(data, null, 2);
+// Markdown을 HTML로 변환하는 함수
+function markdownToHTML(markdown) {
+    return markdown
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // 강조 표시
+        .replace(/\n\n/g, '<br>') // 줄 바꿈 처리
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // 강조 표시
+        .replace(/\| (.*?) \|/g, '<th>$1</th>') // 테이블 헤더
+        .replace(/\| (.*?) \|/g, '<td>$1</td>') // 테이블 셀
+        .replace(/\n/g, '<br>'); // 줄 바꿈 처리
 }
