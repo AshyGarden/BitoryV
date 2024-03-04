@@ -11,31 +11,31 @@
 <th:block layout:fragment="content">
     <meta charset="utf-8">
     <div class="main-banner" id="top">
-        <div id="main" class="container">
+        <div id="main" class="">
             <h2 class="marketTableName" id="Predict" style="color: rgb(221, 221, 221); margin-top:-3%;">가상화폐 종류별 예측 그래프</h2>
             <br><br>
             <!--            <h1 class="marketTableName">Predict Graph</h1>-->
             <div id="bo">
 
                 <!-- ==================== Canvas 예측 그래프.========================= -->
-                <div class="wrapper">
+                <div class="wrapper" style="box-shadow: 0 !important">
                     <div id="stockChart"></div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <button type="button" id="btn1" style="margin-left: 10%; height: 70px; border-radius: 10px">PREDICT UPDATE</button>
-                    <select id="ticker1" style="margin: 5% 0 0 20%; padding: 10px; border-radius: 10px;">									<!--  -->
+                    <button type="button" id="btn1" style="margin-left: 10%; height: 70px; border-radius: 10px; box-shadow: 0">PREDICT UPDATE</button>
+                    <select id="ticker1" style="margin: 0 40% 0 0; padding: 10px; border-radius: 10px;">									<!--  -->
                         <option name="BTC" value="BTC" selected="selected">Bitcoin</option>
                         <option name="ETH" value="ETH">Ethereum</option>
                         <option name="ADA" value="ADA">Cardano</option>
                         <option name="XRP" value="XRP">XRP</option>
                     </select>
-                    <select id="ticker2" style="margin: 5% 20% 0 0; padding: 10px; border-radius: 10px;">									<!--  -->
-                        <option name="BTC" value="BTC" selected="selected">Bitcoin</option>
-                        <option name="ETH" value="ETH">Ethereum</option>
-                        <option name="ADA" value="ADA">Cardano</option>
-                        <option name="XRP" value="XRP">XRP</option>
-                        <option name="doge" value="doge">Doge</option>
-                    </select>
+<!--                    <select id="ticker2" style="margin: 5% 20% 0 0; padding: 10px; border-radius: 10px;">									&lt;!&ndash;  &ndash;&gt;-->
+<!--                        <option name="BTC" value="BTC" selected="selected">Bitcoin</option>-->
+<!--                        <option name="ETH" value="ETH">Ethereum</option>-->
+<!--                        <option name="ADA" value="ADA">Cardano</option>-->
+<!--                        <option name="XRP" value="XRP">XRP</option>-->
+<!--                        <option name="doge" value="doge">Doge</option>-->
+<!--                    </select>-->
                 </div>
             </div>
         </div>

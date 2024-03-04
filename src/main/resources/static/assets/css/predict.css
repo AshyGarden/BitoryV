@@ -9,6 +9,8 @@
     background: #FAFAFA;
     margin: auto;
     border-radius: 10px;
-    box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+    /*box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.2);  그림자 추가 */
 }
 
+#btn1 {
+}

@@ -1,63 +1,15 @@
 <!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultra.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/template}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- ECharts 기본 라이브러리 -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-    <!-- ECharts 워드 클라우드 모듈 -->
-    <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud/dist/echarts-wordcloud.min.js"></script>
-    <title>Bitory Coin Predict</title>
-    <link rel="icon" type="image/x-icon" href="/assets/images/Logo3.png" >
-    <!-- Bootstrap core CSS -->
-    <link href="/assets/css/bs5/bootstrap.min.css" rel="stylesheet">
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <!-- 가상투자 자바스크립트-->
+    <script src="/assets/js/virtualInvest.js"></script>
 
-
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="/assets/css/animate.css">
-    <link rel="stylesheet" href="/assets/css/flex-slider.css">
-    <link rel="stylesheet" href="/assets/css/fontawesome.css">
-    <link rel="stylesheet" href="/assets/css/owl.css">
-    <link rel="stylesheet" href="/assets/css/reset.css">
-    <link rel="stylesheet" href="/assets/css/templatemo-scholar.css">
-
-    <link rel="stylesheet" href="/assets/css/market-table.css">
-    <link rel="stylesheet" href="/assets/css/trade.css">
-    <link rel="stylesheet" href="/assets/css/history.css">
-    <link rel="stylesheet" href="/assets/css/slider.css">
     <link rel="stylesheet" href="/assets/css/virtualInvest.css">
-
-    <!-- 가상화폐 예측분석 그래프 css-->
-    <link rel="stylesheet" href="/assets/css/predict.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
-
 </head>
-<body style="background-color:black;">
-<header class="header-area header-sticky">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <nav class="main-nav">
-                    <!-- ***** Logo Start ***** -->
-                    <a href="/index" class="logo">
-                        <h1><img src="/assets/images/Logo3.png" style="width:15%"> Bitory</h1>
-                    </a>
-                    <!-- ***** Logo End ***** -->
-
-                    <!-- ***** UserInfo Start ***** -->
-                    <div style="float:right; margin:0px 30px; font-size:30px;" class="right_username user-id" th:text="${session.oti}">User Id</div>
-                    <div style="float:right; margin:0px 30px; font-size:30px;" class="right_username user-budget" th:text="${session.otb}">User Budget</div>
-                    <!-- ***** UserInfo End ***** -->
-                </nav>
-            </div>
-        </div>
-    </div>
-</header>
-
+<body>
+<th:block layout:fragment="content">
     <meta charset="utf-8">
     <div class="main-banner" id="top">
         <div id="main" class="container">
@@ -100,7 +52,7 @@
             </div>
         </div>
     </div>
-
+</th:block>
 
 
 </body>
@@ -111,6 +63,4 @@
         </div>
     </div>
 </footer>
-<!-- 가상투자 자바스크립트-->
-<script src="/assets/js/virtualInvest.js"></script>
 </html>
