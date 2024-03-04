@@ -344,3 +344,22 @@ function updateRateChangeChart(data) {
         });
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    // 로컬 스토리지에서 로그 데이터 가져오기
+    const logEntries = JSON.parse(localStorage.getItem('investmentLogs')) || [];
+
+    // 가져온 로그 데이터를 사용하여 로그 테이블에 추가하기
+    const logTableBody = document.getElementById('investmentLogTableBody');
+    logEntries.forEach(entry => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${entry.date}<br>${entry.time}</td>
+            <td>${entry.price}</td>
+            <td>${entry.coinName}<br>${entry.quantity}</td>
+            <td>${entry.isBuy}</td>
+        `;
+        logTableBody.appendChild(newRow);
+    });
+});
+
