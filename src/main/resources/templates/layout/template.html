@@ -77,6 +77,18 @@
     import swiper from 'https://cdn.jsdelivr.net/npm/swiper@11.0.6/+esm'
 </script>
 
+<!-- 스크립트를 통해 user-id 및 user-budget 요소를 숨기는 코드 -->
+<script>
+    // 로그인 페이지 또는 인덱스 페이지인 경우에만 실행되도록 조건 추가
+    if (window.location.pathname === '/login' || window.location.pathname === '/index') {
+        // user-id 요소 숨기기
+        document.querySelector('.user-id').style.display = 'none';
+        // user-budget 요소 숨기기
+        document.querySelector('.user-budget').style.display = 'none';
+    }
+</script>
+
+
 
 </body>
 </html>

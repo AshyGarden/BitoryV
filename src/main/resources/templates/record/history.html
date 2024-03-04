@@ -16,12 +16,13 @@
         <div id="main" class="container">
             <div class="container" style="margin-top:-3%">
                 <div class="row">
+                    <!-- Chart&Graph Start -->
                     <div class="col-6" style="margin-left:-2%">
                         <div class="row">
                             <div class="col">
                                 <div class="container-table p-3">
                                     <div class="chart-container">
-                                        <canvas id="TradeVolumeChart"></canvas>
+                                        <canvas id="AccTradePrice24hChart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -35,7 +36,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="container-table p-3" style="width:100%">
-                                    <h3 style="text-align:center;" >거래량 TOP5</h3>
+                                    <h3 style="text-align:center;" >거래대금 TOP5</h3>
                                     <table id="realtimeTradeVolumeTable">
                                         <thead>
                                         <tr>
@@ -71,51 +72,24 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Chart&Graph End -->
 
-                    <div class="col-3" style="margin-right:1%">
+                    <div class="col-6 container-table" style="height:800px">
+                        <h1 class="m-3" style="color:white; text-align:center;">My Budget</h1>
                         <div class="row">
-                            <div class="container-table p-3 ms-3" style="min-height: 300px">
-                                <h3 style="text-align:center">Buy</h3>
-                                <table style="min-height: 725px">
-                                    <thead>
-                                    <tr>
-                                        <th>종목명</th>
-                                        <th>거래량</th>
-                                        <th>일시</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>종목명 값</td>
-                                        <td>거래량 값</td>
-                                        <td>일시 값</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3" style="margin-right:1%">
-                        <div class="row">
-                            <div class="container-table p-3 ms-3" style="min-height: 300px">
-                                <h3 style="text-align:center">Sell</h3>
-                                <table style="min-height: 725px">
-                                    <thead>
-                                    <tr>
-                                        <th>종목명</th>
-                                        <th>거래량</th>
-                                        <th>일시</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>종목명 값</td>
-                                        <td>거래량 값</td>
-                                        <td>일시 값</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table style="min-height: 800px">
+                                <thead>
+                                <tr>
+                                    <th style="width:30%;">시간</th>
+                                    <th style="width:30%;">가격/총액(수수료포함)</th>
+                                    <th style="width:25%;">종목/수량</th>
+                                    <th style="width:15%;">여부</th>
+                                </tr>
+                                </thead>
+                                <tbody id="investmentLogTableBody">
+                                <!-- 이곳에 매수/매도 로그가 추가됩니다. -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
