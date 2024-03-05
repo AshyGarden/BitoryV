@@ -16,3 +16,26 @@ body {
 .fall {
     color: #F44336;
 }
+
+
+
+.my-budget  {
+    overflow-y: auto; /* 세로 방향으로 스크롤바가 필요할 때만 나타나게 합니다. */
+    max-height: 800px; /* 최대 높이 설정 */
+}
+
+
+/* 스크롤바 디자인을 커스텀합니다 */
+.my-budget ::-webkit-scrollbar {
+  width: 10px; /* 스크롤바의 너비 */
+}
+
+.my-budget ::-webkit-scrollbar-thumb {
+  height: 10%; /* 스크롤바의 길이 */
+  background: rgb(225, 225, 225); /* 스크롤바의 색상 */
+  border-radius: 10px; /* 스크롤바 모서리의 둥근 정도 */
+}
+
+.my-budget ::-webkit-scrollbar-track {
+  background: rgba(33, 122, 244, .1); /* 스크롤바 트랙의 배경 색상 */
+}

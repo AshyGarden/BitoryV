@@ -330,8 +330,8 @@ function updateRateChangeChart(data) {
                 indexAxis: 'y',
                 scales: {
                     x: {
-                        min: -0.009,
-                        max: 0.009
+                        min: -0.09,
+                        max: 0.09
                     }
                 },
                 plugins: {
