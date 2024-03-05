@@ -126,8 +126,8 @@ updateHeaderInvestmentInfo();
         <!-- =========================   실시간 가상화폐 주가 테이블  ==============================-->
         <div class="container">
             <div class="row">
-                <div class="col ms-3" style="height:600px;">
-                    <div class="container-table ms-3 p-2"  style="height:600px; max-width: 50vw;">
+                <div class="col ms-3" style="height:700px;">
+                    <div class="container-table ms-3 p-2"  style="height:700px; max-width: 50vw;">
                         <h2  class="mt-3"  style="text-align:center;">Your Virtual Investment</h2>
                         <table style="min-height: 400px">
                             <thead>
@@ -139,10 +139,7 @@ updateHeaderInvestmentInfo();
                             </tr>
                             </thead>
                             <tbody id="investmentLogTableBody">
-                            <!-- 로딩 GIF 이미지 -->
-                            <div id="loading" style="display: none; position: absolute; top: 55%; left: 72%; transform: translate(-50%, -50%);">
-                                <img src="/assets/images/loading5.gif" style="width:500px" alt="로딩 중...">
-                            </div>
+
                             <!-- 이곳에 매수/매도 로그가 추가됩니다. -->
                             </tbody>
                         </table>
@@ -154,9 +151,13 @@ updateHeaderInvestmentInfo();
                             onclick="window.location.href='/predict'">Predict</button>
                 </div>
                 <div class="col">
-                    <div class="container-table ms-3 p-2"  style="height:600px; max-width: 50vw;">
+                    <div class="container-table ms-3 p-2"  style="height:700px; max-width: 50vw;">
                         <h1 class="mt-3" style="text-align:center;">Investment Analysis Report</h1>
-                        <pre id="response-data"></pre> <!-- 응답 데이터가 표시될 요소 -->
+                        <pre id="response-data" style="font-size:18px"></pre> <!-- 응답 데이터가 표시될 요소 -->
+                        <!-- 로딩 GIF 이미지 -->
+                        <div id="loading" style="display: none; position: relative; top: 40%; left: 72%; transform: translate(-50%, -50%);">
+                            <img src="/assets/images/loading5.gif" style="width:500px" alt="로딩 중...">
+                        </div>
                     </div>
                     <br>
                     <button type="button"

@@ -420,7 +420,7 @@ var svg2 = d3.select("#stockChart")
     .append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("background-color", "yellow");
+        .style("background-color", "white");
 // x축의 위치를 지정
 var xaxis = svg2.append("g")
     .attr("transform", "translate(80, 570)")
