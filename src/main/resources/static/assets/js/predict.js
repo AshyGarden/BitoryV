@@ -109,7 +109,7 @@ function func() {
 
 document.addEventListener("DOMContentLoaded", async () => {		// select 태그의 값이 바뀌는 것을 감지하기 위해
 	func();
-	await handleFetchDataAndPrepareChart();						// 차트를 그려주는 함수 호출
+	// await handleFetchDataAndPrepareChart();						// 차트를 그려주는 함수 호출
 
     $("#btn1").on("click", async() => {			        // select 태그의 값이 바뀌는 것을 감지
         func();
