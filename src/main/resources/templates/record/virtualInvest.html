@@ -151,8 +151,32 @@ updateHeaderInvestmentInfo();
                             onclick="window.location.href='/predict'">Predict</button>
                 </div>
                 <div class="col">
-                    <div class="container-table ms-3 p-2"  style="height:700px; max-width: 50vw;">
-                        <h1 class="mt-3" style="text-align:center;">Investment Analysis Report</h1>
+
+                    <div class="container-table reports-container ms-3 p-2"  style="height:700px; max-width: 50vw;">
+                        <div class="row">
+                            <div class="col-8">
+                                <h1 class="mt-3" style="text-align:center;">Investment Analysis Report</h1>
+                            </div>
+                            <div class="col">
+                                <button onclick="playAudio()" class="btn btn-danger"><i class="fa-solid fa-play"></i></button>
+                            </div>
+                            <div class="col">
+                                <button onclick="pauseAudio()" class="btn btn-secondary"><i class="fa-solid fa-pause"></i></button>
+                            </div>
+                            <div class="col">
+                                <button onclick="stopAudio()" class="btn btn-warning"><i class="fa-solid fa-stop"></i></button>
+                            </div>
+                            <div class="col">
+                                <button onclick="restartAudio()" class="btn btn-info"><i class="fa-solid fa-reply"></i></button>
+                            </div>
+
+                        </div>
+                        <div id="coin-buttons-container"></div>
+                        <div id="reports-container"></div>
+
+                        <img id="image" src="/assets/images/virtual.gif" style="display: none; width:50%; height:500px; left:20%; position:relative;">
+
+                        <audio id="audioPlayer" src="/assets/images/output.mp3"></audio>
                         <pre id="response-data" style="font-size:18px"></pre> <!-- 응답 데이터가 표시될 요소 -->
                         <!-- 로딩 GIF 이미지 -->
                         <div id="loading" style="display: none; position: relative; top: 40%; left: 72%; transform: translate(-50%, -50%);">

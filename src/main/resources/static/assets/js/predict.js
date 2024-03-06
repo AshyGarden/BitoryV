@@ -30,6 +30,7 @@
 let tickerSelect1 = document.getElementById("ticker1")
 
 async function fetchData () {									// 예측 가격과 일시 데이터를 요청 및 전달받는 함수
+    showLoading(); // 데이터 로딩 시작 전에 로딩 이미지 표시
     let ticker1 = tickerSelect1.value
 
 	try {
@@ -42,7 +43,7 @@ async function fetchData () {									// 예측 가격과 일시 데이터를 �
 	    });
 	    // 응답을 기다리고 JSON으로 파싱합니다.
 	    const result = await response.json();
-
+        hideLoading(); // 데이터 로딩이 완료되면 로딩 이미지 숨김
 	    return result		// JSON 형식으로 바꾼 데이터를 반환
 	} catch (error) {
 	    console.error("Error fetching data:", error);
@@ -515,3 +516,13 @@ async function handleFetchDataAndPrepareChart() {
 //    }
 //
 //    tick(0);
+
+
+
+function showLoading() {
+    document.getElementById('loading').style.display = 'block';
+}
+
+function hideLoading() {
+    document.getElementById('loading').style.display = 'none';
+}

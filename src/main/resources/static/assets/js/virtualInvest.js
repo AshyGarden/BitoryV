@@ -79,3 +79,32 @@ function markdownToHTML(markdown) {
         .replace(/\| (.*?) \|/g, '<td>$1</td>') // 테이블 셀
         .replace(/\n/g, '<br>'); // 줄 바꿈 처리
 }
+
+
+var audio = document.getElementById("audioPlayer");
+    var image = document.getElementById("image");
+
+    function playAudio() {
+        audio.play();
+        image.style.display = "block"; // 이미지를 표시
+    }
+
+    function pauseAudio() {
+        audio.pause();
+    }
+
+    function stopAudio() {
+        audio.pause();
+        audio.currentTime = 0;
+        image.style.display = "none"; // 이미지를 숨김
+    }
+
+    function restartAudio() {
+        stopAudio();
+        playAudio();
+    }
+
+    // 오디오가 재생을 완료했을 때 이미지를 숨김
+    audio.addEventListener("ended", function() {
+        image.style.display = "none";
+    });
