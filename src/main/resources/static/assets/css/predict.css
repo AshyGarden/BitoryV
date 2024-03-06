@@ -12,5 +12,13 @@
     /*box-shadow: 4px 4px 10px 3px rgba(0, 0, 0, 0.2);  그림자 추가 */
 }
 
-#btn1 {
+#ErrorPrint p{
+        font-size: 17px;
+        color: black;
+        margin-top: 20px;
+        margin-left: 20px;
+}
+
+#ErrorPrint {
+    align-items: center;
 }

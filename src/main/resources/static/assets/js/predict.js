@@ -118,11 +118,16 @@ document.addEventListener("DOMContentLoaded", async () => {		// select 태그의
 });
 
 
+var printmse = document.getElementById("mse");
+var printmae = document.getElementById("mae");
+var printmape = document.getElementById("mape");
 
-//d3.select("#btn1").on("click", () => {
-//    handleFetchDataAndPrepareChart()
-//});
-
+function printErrorPercent() {
+    // 원래 content에 있던 텍스트를 삭제
+    printmse.innerHTML = "";
+    printmae.innerHTML = "";
+    printmape.innerHTML = "";
+}
 
 async function handleFetchDataAndPrepareChart() {
         // select 태그로 선택한 ticker1, 2
@@ -134,6 +139,14 @@ async function handleFetchDataAndPrepareChart() {
 
         dataArray1 = arrays[0].slice(4320, 4344);
         dataArray2 = arrays[0].slice(4344, 4561);
+
+        let mse = arrays[2];
+        let mae = arrays[3];
+        let mape = arrays[4];
+
+        printmse.innerHTML = mse;
+        printmae.innerHTML = mae;
+        printmape.innerHTML = mape;
 
     xValue.domain([new Date(d3.min(dataArray1.map(d => d.days))), new Date(d3.max(dataArray1.map(d => d.days)))])
            .range([0, width]);
@@ -197,8 +210,6 @@ async function handleFetchDataAndPrepareChart() {
                         .duration(500)
                         .ease(d3.easeLinear)
                         .call(xAxis)
-
-
             yaxis1
             // .attr('transform', "translate(80, 570)")
                 .transition()
