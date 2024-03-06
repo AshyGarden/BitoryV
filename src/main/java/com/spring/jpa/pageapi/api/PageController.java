@@ -31,7 +31,7 @@ public class PageController {
     @GetMapping("/predict")
     public String predict(){
 
-        return "/predict/predict";
+        return "predict/predict";
     }
 
     @GetMapping("/trend")
