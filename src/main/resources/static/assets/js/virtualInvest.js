@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 async function sendInvestmentLogs(logEntries) {
+
     const logsText = getInvestmentLogsText(logEntries);
 
     try {
@@ -65,7 +66,7 @@ function getInvestmentLogs() {
 // 로컬 스토리지에서 투자 로그 데이터를 가져와 value 값만 추출하여 텍스트로 변환
 function getInvestmentLogsText(logEntries) {
     // 각 로그 항목의 value만 추출하여 텍스트로 변환
-    const logsText = logEntries.map(entry => `${entry.date} ${entry.time} ${entry.price} ${entry.coinName} ${entry.quantity} ${entry.isBuy}`).join('; ');
+    const logsText = logEntries.map(entry => `${entry.date} ${entry.time} ${entry.price} ${entry.coinName} ${entry.quantity} ${ entry.isBuy ? '매수' : '매도'}`).join('; ');
     return logsText;
 }
 
@@ -119,3 +120,26 @@ var audio = document.getElementById("audioPlayer");
         // 오디오를 10초 앞으로 당깁니다
         audio.currentTime = Math.min(audio.duration, audio.currentTime + 3);
     });
+
+
+    // 음성 파일 URL을 업데이트하는 함수
+    function updateAudioSource(newAudioUrl) {
+        var audioPlayer = document.getElementById("audioPlayer");
+        audioPlayer.src = newAudioUrl + "?ts=" + new Date().getTime(); // 타임스탬프를 이용한 캐싱 방지
+        audioPlayer.load(); // 새로운 소스로 오디오 로드
+        audioPlayer.play(); // 오디오 재생
+    }
+
+    // 서버로부터 새로운 음성 파일 URL을 받아오는 함수 예시
+    async function fetchNewAudio() {
+        try {
+            const response = await fetch('http://127.0.0.1:8000//process-text-logs');
+            const data = await response.json();
+            updateAudioSource(data.newAudioUrl); // 새로운 음성 파일로 오디오 소스 업데이트
+        } catch (error) {
+            console.error('음성 파일 업데이트 중 오류 발생:', error);
+        }
+    }
+
+    // 필요할 때 fetchNewAudio 함수 호출
+    fetchNewAudio();
