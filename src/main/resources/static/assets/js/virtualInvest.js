@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             <td>${entry.date}<br>${entry.time}</td>
             <td>${entry.price}</td>
             <td>${entry.coinName}<br>${entry.quantity}</td>
-            <td>${entry.isBuy}</td>
+            <td>${entry.isBuy ? '매수' : '매도'}</td>
         `;
         logTableBody.appendChild(newRow);
     });
@@ -107,4 +107,15 @@ var audio = document.getElementById("audioPlayer");
     // 오디오가 재생을 완료했을 때 이미지를 숨김
     audio.addEventListener("ended", function() {
         image.style.display = "none";
+    });
+
+
+    document.getElementById('rewindAudio').addEventListener('click', function() {
+        // 오디오를 10초 뒤로 당깁니다
+        audio.currentTime = Math.max(0, audio.currentTime - 3);
+    });
+
+    document.getElementById('forwardAudio').addEventListener('click', function() {
+        // 오디오를 10초 앞으로 당깁니다
+        audio.currentTime = Math.min(audio.duration, audio.currentTime + 3);
     });

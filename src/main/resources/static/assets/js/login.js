@@ -21,6 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return; // 함수 종료
         }
 
+
+        // localStorage에 사용자 ID와 예산 저장
+        localStorage.setItem('oti', idInput);
+        localStorage.setItem('userBudget', budgetInput.toString()); // 초기 예산을 문자열로 변환하여 저장
+
+        // 로그인 과정 생략하고 직접 페이지 이동 또는 다음 단계 처리
+        window.location.href = "/trend"; // 예시 URL, 실제 애플리케이션의 URL에 맞게 조정
+
         // AJAX 요청으로 서버에 로그인 정보 전송
         fetch("/loginProcess?oti=" + idInput + "&otb=" + budgetInput, {
             method: 'GET'

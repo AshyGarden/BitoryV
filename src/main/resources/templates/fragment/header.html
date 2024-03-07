@@ -9,13 +9,13 @@
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a href="/index" class="logo">
-                            <h1><img src="/assets/images/Logo3.png" style="width:15%"> Bitory</h1>
+                            <h2><img src="/assets/images/Logo3.png" style="width:15%"> Bitory</h2>
                         </a>
                         <!-- ***** Logo End ***** -->
 
                         <!-- ***** UserInfo Start ***** -->
                         <!-- 사용자 ID 표시 -->
-                        <div style="float:right; color:white; margin:0px 30px; font-size:30px;" class="right_username user-id" th:text="${session.oti}+'님'">User Id</div>
+                        <div style="float:right; color:white; margin:0px 30px; font-size:20px;" class="right_username user-id" th:text="${session.oti}+'님'">User Id</div>
 
                         <!-- 사용자 예산 표시 -->
                         <div style="float:right; color:white; margin:0px 30px; font-size:20px;" class="right_username user-budget" id="user-budget">User Budget</div>
@@ -37,10 +37,12 @@
     <script>
 
         // 페이지 로드 시 실행
+        // 전역 스코프에 userBudget 정의
+        let userBudget = 0;
         document.addEventListener('DOMContentLoaded', function() {
             // localStorage에서 사용자 아이디와 예산을 가져옴
             const userId = localStorage.getItem('oti') || 'Null'; // 기본값 설정
-            const userBudget = parseFloat(localStorage.getItem('otb')) || 0; // 기본값 설정
+            userBudget = parseFloat(localStorage.getItem('otb')) || 0; // 기본값 설정
 
             // 가져온 값으로 헤더에 사용자 정보 표시
             const userIdElement = document.querySelector('.right_username.user-id');
@@ -49,6 +51,9 @@
             // 아이콘과 텍스트를 함께 추가하여 표시
             userIdElement.innerHTML = '<i class="fa-solid fa-circle-user"></i> ' + userId;
             userBudgetElement.innerHTML = '<i class="fa-solid fa-coins"></i> ' + '초기 자산 : ' + userBudget.toLocaleString() + ' 원';
+
+            // 페이지 로딩 시 예산 표시를 업데이트
+    updateBudgetDisplay();
         });
 
 

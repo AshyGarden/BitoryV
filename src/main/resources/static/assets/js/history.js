@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${entry.date}<br>${entry.time}</td>
             <td>${entry.price}</td>
             <td>${entry.coinName}<br>${entry.quantity}</td>
-            <td>${entry.isBuy}</td>
+            <td>${entry.isBuy ? '매수' : '매도'}</td>
         `;
         logTableBody.appendChild(newRow);
     });

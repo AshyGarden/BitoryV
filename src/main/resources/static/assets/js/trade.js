@@ -356,8 +356,31 @@ function addToInvestmentLog(coinName, coinCode, orderPrice, orderQuantity, total
 
 
 
+// 예산 표시를 갱신합니다.
+function updateBudgetDisplay() {
+    var availableAmountTags = document.querySelectorAll('.availableAmount');
+    availableAmountTags.forEach(function(tag) {
+        tag.textContent = `${userBudget.toLocaleString()} 원`;
+    });
+}
+
+
+
 // 매수 실행 버튼 클릭 이벤트
 document.getElementById("confirmBuyButton").addEventListener("click", function() {
+    var orderPrice = parseFloat(document.getElementById("orderPrice").value);
+    var orderQuantity = parseFloat(document.getElementById("orderQuantity").value);
+    var estimatedAmount = orderPrice * orderQuantity + (orderPrice * orderQuantity * 0.0025); // 매수 예상금액 + 수수료
+
+    if (userBudget < estimatedAmount) {
+        alert('매수할 수 있는 예산이 부족합니다.');
+        return;
+    }
+
+    userBudget -= estimatedAmount; // 예산 업데이트
+    updateBudgetDisplay(); // 예산 표시 업데이트
+
+
     var coinName = document.getElementById("coinName2").textContent.trim();
     var coinCode = document.getElementById("coinCode2").textContent.trim();
     var orderPrice = parseFloat(document.getElementById("orderPrice").value);
@@ -391,6 +414,8 @@ document.getElementById("confirmBuyButton").addEventListener("click", function()
         alert('매수 주문 처리 중 오류가 발생했습니다.');
         $('#OrderModal').modal('hide');
     });
+
+
 });
 
 
@@ -439,6 +464,13 @@ document.getElementById("confirmBuyButton").addEventListener("click", function()
 
  // 매도 실행 버튼 클릭 이벤트
  document.getElementById("confirmSellButton").addEventListener("click", function() {
+     var sellOrderPrice = parseFloat(document.getElementById("sellOrderPrice").value);
+     var sellOrderQuantity = parseFloat(document.getElementById("sellOrderQuantity").value);
+     var sellEstimatedAmount = sellOrderPrice * sellOrderQuantity - (sellOrderPrice * sellOrderQuantity * 0.0025); // 매도 예상금액 - 수수료
+
+     userBudget += sellEstimatedAmount; // 예산에 매도 금액 추가
+
+
      var coinName = document.getElementById("coinName2").textContent.trim();
      var coinCode = document.getElementById("coinCode2").textContent.trim();
      var sellOrderPrice = parseFloat(document.getElementById("sellOrderPrice").value);
@@ -472,6 +504,9 @@ document.getElementById("confirmBuyButton").addEventListener("click", function()
          alert('매도 주문 처리 중 오류가 발생했습니다.');
          $('#SellModal').modal('hide'); // 모달 닫기
      });
+      // 사용자의 예산을 업데이트합니다.
+        localStorage.setItem('userBudget', userBudget.toString()); // 업데이트된 예산을 저장
+        alert('매도 주문이 성공적으로 처리되었습니다.');
  });
 
 
@@ -493,17 +528,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    var userBudget = localStorage.getItem('otb') || '0'; // localStorage에서 사용자의 예산을 가져옵니다.
-
-    // 모든 "주문가능" 금액을 표시하는 요소를 찾습니다.
-    var availableAmountTags = document.querySelectorAll('.availableAmount');
-
-    // 각 요소의 내용을 업데이트합니다.
-    availableAmountTags.forEach(function(tag) {
-        tag.textContent = `${parseFloat(userBudget).toLocaleString()} 원`; // 가져온 예산을 표시합니다.
-    });
-});
-
-
-// <================================ 시장가 매수/매도 ================================================>
